@@ -19,7 +19,7 @@ class Letter {
 
 /// iki string alip trial ve target [1,0,0,-1,1] seklinda sonuc donen bi comparator lazim
 List<int> calculateFlag(String wordle) {
-  String target = 'KALEM';
+  String target = 'MERAK';
   //String wordle = 'DACCE';
   List<int> flags = [0, 0, 0, 0, 0];
 

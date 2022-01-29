@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:wordle_flutter/wordle.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,9 +30,16 @@ class _PuzzlePageState extends State<PuzzlePage> {
       // Kelimeyi tdk da sorgula
       bool response = await isValid(textController.text);
       // Eger kelime gecerliyse Flag hesaplat ve boyat
-      if (response) {
+      if (!response) {
+        showToast(
+          'Geçersiz Sözcük',
+          alignment: Alignment.center,
+          position: StyledToastPosition.center,
+          context: context,
+          animation: StyledToastAnimation.scale,
+        );
+      } else {
         var activeFlag = calculateFlag(textController.text);
-        print('activeFlag: $activeFlag');
         paintBoxes(activeFlag);
         activeLine++;
         textController.text = '';
