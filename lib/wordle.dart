@@ -53,5 +53,3 @@ List<int> calculateFlag(String wordle) {
 
 // TODO: https://sozluk.gov.tr/gts?ara=kaput
 // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
-// Target kelime bulmak için link
-// https://github.com/atmanat/random-wordlist-tr/blob/master/trlist-orig.txt

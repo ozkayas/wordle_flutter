@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:wordle_flutter/wordle.dart';
 import 'package:http/http.dart' as http;
+import 'package:wordle_flutter/words.dart';
 
 import 'keyboard.dart';
 
@@ -16,6 +18,7 @@ class PuzzlePage extends StatefulWidget {
 }
 
 class _PuzzlePageState extends State<PuzzlePage> {
+  late String target;
   //counter holds which wordle is active [0 .. 5]
   int activeLine = 0;
   //wordle text length
@@ -47,6 +50,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
     }
   }
 
+  void defineTarget() {
+    target = targets[Random().nextInt(targets.length)];
+  }
+
   Future<bool> isValid(String wordle) async {
     // TODO: https://sozluk.gov.tr/gts?ara=kaput
     // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
@@ -74,6 +81,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void initState() {
     super.initState();
+
     textController.addListener(() {
       // Limit text length to 5 characters
       if (textController.text.length > maxChar) {
