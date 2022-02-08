@@ -37,6 +37,8 @@ dependencies:
   flutter_screenutil: ^5.1.1
   http: ^0.13.4
   flutter_styled_toast: ^2.0.0
+  turkish: ^0.2.1
+  flutter_bloc: ^8.0.1
 
 dev_dependencies:
   flutter_test:

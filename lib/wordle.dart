@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Wordle {
   List<Letter> letters = List.filled(5, Letter.empty());
 
@@ -14,12 +16,16 @@ class Letter {
 
   Letter(this.char, this.flag);
 
-  Letter.empty([this.char = '', this.flag = 0]);
+  Letter.empty([this.char = '', this.flag = 2]);
 }
 
 /// iki string alip trial ve target [1,0,0,-1,1] seklinda sonuc donen bi comparator lazim
-List<int> calculateFlag(String wordle) {
-  String target = 'MERAK';
+List<int> calculateFlag(
+    String target, String wordle, Function(String letter) paintLetter) {
+  if (kDebugMode) {
+    print(target);
+  }
+  // String target = 'MERAK';
   //String wordle = 'DACCE';
   List<int> flags = [0, 0, 0, 0, 0];
 
@@ -44,6 +50,13 @@ List<int> calculateFlag(String wordle) {
     if (flags[i] != 1 && targetList.contains(wordleList[i])) {
       flags[i] = -1;
       targetList.remove(wordleList[i]);
+    }
+  }
+
+  for (var i = 0; i < wordleList.length; i++) {
+    //Paint non existing letters for keyboard
+    if (flags[i] == 0) {
+      paintLetter(wordleList[i]);
     }
   }
 
