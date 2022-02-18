@@ -2,13 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:wordle_flutter/wordle.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wordle_flutter/models/wordle.dart';
 import 'package:http/http.dart' as http;
 import 'package:wordle_flutter/words.dart';
 import 'package:turkish/turkish.dart';
-import 'keyboard.dart';
+import 'keyboard/cubit/keyboard_cubit.dart';
+import 'keyboard/keyboard.dart';
 
 class PuzzlePage extends StatefulWidget {
   const PuzzlePage({Key? key}) : super(key: key);
@@ -30,44 +34,17 @@ class _PuzzlePageState extends State<PuzzlePage> {
   List<Wordle> tableState = List.generate(
       6, (_) => Wordle(List<Letter>.generate(5, (_) => Letter.empty())));
 
-  Map<String, bool> letterStatus = {
-    'E': true,
-    'R': true,
-    'T': true,
-    'Y': true,
-    'U': true,
-    'I': true,
-    'O': true,
-    'P': true,
-    'Ğ': true,
-    'Ü': true,
-    'A': true,
-    'S': true,
-    'D': true,
-    'F': true,
-    'G': true,
-    'H': true,
-    'J': true,
-    'K': true,
-    'L': true,
-    'Ş': true,
-    'İ': true,
-    'Z': true,
-    'C': true,
-    'V': true,
-    'B': true,
-    'N': true,
-    'M': true,
-    'Ö': true,
-    'Ç': true,
-  };
+  late KeyboardCubit _keyboardCubit;
 
-  void paintLetter(String letter) {
-    letterStatus[letter] = false;
+  @override
+  void didChangeDependencies() {
+    _keyboardCubit = BlocProvider.of<KeyboardCubit>(context);
+    super.didChangeDependencies();
   }
 
   void resetGame() {
     //TODO: reset keyboard state also
+    BlocProvider.of<KeyboardCubit>(context).resetState();
     resetTarget();
     activeLine = 0;
     textController.text = '';
@@ -90,8 +67,8 @@ class _PuzzlePageState extends State<PuzzlePage> {
           animation: StyledToastAnimation.scale,
         );
       } else {
-        var activeFlag = calculateFlag(
-            target.toUpperCaseTr(), textController.text, paintLetter);
+        var activeFlag =
+            calculateFlag(target.toUpperCaseTr(), textController.text);
         await paintBoxes(activeFlag);
         if (!activeFlag.contains(0) && !activeFlag.contains(-1)) {
           setState(() {
@@ -118,7 +95,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
             showToast(
               'BRAVO :)',
               context: context,
-              position: StyledToastPosition.center,
+              position: StyledToastPosition.top,
               animation: StyledToastAnimation.scale,
             );
             setState(() {
@@ -153,9 +130,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
     }
   }
 
+  // Method paints boxes after a word is checked according to flags
   Future<void> paintBoxes(List<int> flags) async {
     for (var i = 0; i < flags.length; i++) {
       tableState[activeLine].letters[i].flag = flags[i];
+      _keyboardCubit.paintLetter(
+          tableState[activeLine].letters[i].char, flags[i]);
     }
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 500));
@@ -187,6 +167,16 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   @override
   Widget build(BuildContext context) {
+    final flutterWebviewPlugin = FlutterWebviewPlugin();
+
+    flutterWebviewPlugin.onStateChanged.listen((viewState) async {
+      if (viewState.type == WebViewState.finishLoad) {
+        flutterWebviewPlugin.evalJavascript(
+            '''<script language="JavaScript" type="text/javascript">\$('.tdk-search-input').val('liyakat')
+\$('.btdk-srch').click()'</script>''');
+      }
+    });
+
     ScreenUtil.init(
         BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width,
@@ -197,14 +187,32 @@ class _PuzzlePageState extends State<PuzzlePage> {
         orientation: Orientation.portrait);
     return SafeArea(
       child: Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   title: const Text(
-        //     'WORDLEY',
-        //     style: TextStyle(fontSize: 30),
-        //   ),
-        // ),
+        // appBar: AppBar(actions: [
+        //   IconButton(
+        //       onPressed: () async {
+        //         await flutterWebviewPlugin.launch(
+        //           'https://sozluk.gov.tr',
+        //         );
+        //         // // await Navigator.of(context).push(MaterialPageRoute(
+        //         // //     builder: (context) => WebviewScaffold(
+        //         // //           url: "https://sozluk.gov.tr",
+        //         // //           appBar: AppBar(
+        //         // //             title: const Text("TDK"),
+        //         // //           ),
+        //         // //         )));
+
+        //         // flutterWebviewPlugin.evalJavascript(
+        //         //     '<script language="JavaScript" type="text/javascript">alert("Hello World")</script>');
+
+        //         // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
+        //         // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
+
+        //         // if (await canLaunch(url)) {
+        //         //   launch(url);
+        //         // }
+        //       },
+        //       icon: Icon(Icons.navigate_next))
+        // ]),
         body: Center(
           child: Stack(
             alignment: Alignment.center,
@@ -220,7 +228,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   KeyBoardWidget(
                     textController: textController,
                     handleEnter: handleEnter,
-                    letterStatus: letterStatus,
                   )
                 ],
               ),
@@ -240,20 +247,44 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       ],
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24)),
-                  height: 150.h,
+                  //height: 200.h,
                   width: 320.w,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        resetGame();
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            resetGame();
+                            gameOver = false;
+                          });
+                        },
+                        child: Text(
+                          'TEKRAR OYNA',
+                          style:
+                              TextStyle(fontSize: 30.sp, color: Colors.green),
+                        ),
+                      ),
+                      // TextButton(
+                      //   child: Text(
+                      //       'Sözlükte Aç:${textController.text.toLowerCaseTr()}'),
+                      //   onPressed: () {
+                      //     Navigator.of(context).push(MaterialPageRoute(
+                      //         builder: (context) => WebviewScaffold(
+                      //               url: "https://www.google.com",
+                      //               appBar: new AppBar(
+                      //                 title: new Text("Widget webview"),
+                      //               ),
+                      //             )));
+                      //     // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
+                      //     // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
 
-                        gameOver = false;
-                      });
-                    },
-                    child: Text(
-                      'TEKRAR OYNA',
-                      style: TextStyle(fontSize: 30.sp, color: Colors.green),
-                    ),
+                      //     // if (await canLaunch(url)) {
+                      //     //   launch(url);
+                      //     // }
+                      //   },
+                      // )
+                    ],
                   ),
                 )
             ],
@@ -264,6 +295,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   }
 }
 
+// A row of 5 CharBoxes
 class WordleWidget extends StatelessWidget {
   const WordleWidget({Key? key, required this.wordle}) : super(key: key);
   final Wordle wordle;
@@ -277,6 +309,8 @@ class WordleWidget extends StatelessWidget {
   }
 }
 
+// Visual Box for Letter objects
+//
 class CharBox extends StatelessWidget {
   const CharBox({
     Key? key,
@@ -292,7 +326,7 @@ class CharBox extends StatelessWidget {
             ? Colors.lightGreen
             : letter.flag == 2
                 ? Colors.blueGrey.shade300
-                : Colors.yellow.shade800;
+                : Colors.yellow.shade700;
     return AnimatedContainer(
       margin: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
@@ -306,9 +340,7 @@ class CharBox extends StatelessWidget {
           child: Text(
         letter.char,
         style: TextStyle(
-            fontSize: 34.sp,
-            fontWeight: FontWeight.normal,
-            color: Colors.white),
+            fontSize: 34.sp, fontWeight: FontWeight.bold, color: Colors.white),
       )),
     );
   }
