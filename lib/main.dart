@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_flutter/puzzle_page.dart';
 
-import 'cubit/table_cubit.dart';
-import 'keyboard/cubit/keyboard_cubit.dart';
+import 'features/keyboard/keyboard_cubit.dart';
+import 'features/table/table_cubit.dart';
 
 void main() {
   runApp(const MyApp());

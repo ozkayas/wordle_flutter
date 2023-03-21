@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wordle_flutter/keyboard/built_in_keyboard.dart';
-import 'package:wordle_flutter/keyboard/cubit/keyboard_cubit.dart';
 
-import '../models/enums.dart';
+import '../../models/enums.dart';
+import 'built_in_keyboard.dart';
+import 'keyboard_cubit.dart';
 
 // Wrapper Widget around forked built_in_keyboard package
 class KeyBoardWidget extends StatefulWidget {
@@ -36,7 +35,7 @@ class _KeyBoardWidgetState extends State<KeyBoardWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+      padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 15 ),
       child: BlocBuilder<KeyboardCubit, Map<String, LetterState>>(
         builder: (context, state) {
           return BuiltInKeyboard(

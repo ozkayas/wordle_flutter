@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wordle_flutter/keyboard/cubit/keyboard_cubit.dart';
 
-import '../models/enums.dart';
+import '../../models/enums.dart';
+
 
 class BuiltInKeyboard extends StatefulWidget {
   // layoutType of the keyboard
@@ -102,12 +101,12 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
             height: widget.spacing,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            SizedBox(
-              width: 10.w,
+            const SizedBox(
+              width: 10 ,
             ),
             ...keyboardLayout.sublist(10, 21),
-            SizedBox(
-              width: 10.w,
+            const SizedBox(
+              width: 10 ,
             )
           ]),
           SizedBox(
@@ -142,7 +141,7 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
       child: ClipRRect(
         borderRadius: widget.borderRadius ?? BorderRadius.circular(0),
         child: Container(
-          margin: EdgeInsets.all(1.w),
+          margin: const EdgeInsets.all(1),
           height: widget.height ?? height,
           width: widget.width ?? width,
           child: Material(
@@ -212,7 +211,7 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
     );
   }
 
-  // Backspace button widget
+  // Backspace button widgetx
   Widget backSpace() {
     return Flexible(
       child: ClipRRect(

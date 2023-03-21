@@ -6,14 +6,14 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:wordle_flutter/models/wordle.dart';
 import 'package:http/http.dart' as http;
 import 'package:wordle_flutter/words.dart';
 import 'package:turkish/turkish.dart';
-import 'keyboard/cubit/keyboard_cubit.dart';
-import 'keyboard/keyboard.dart';
+
+import 'features/keyboard/keyboard.dart';
+import 'features/keyboard/keyboard_cubit.dart';
 
 class PuzzlePage extends StatefulWidget {
   const PuzzlePage({Key? key}) : super(key: key);
@@ -28,6 +28,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   late String target;
   //counter holds which wordle is active [0 .. 5]
+  //each row of the table is a wordle
   int activeLine = 0;
   //wordle text length
   int maxChar = 5;
@@ -59,7 +60,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
       // Kelimeyi tdk da sorgula
       bool response = await isValid(textController.text);
       // Eger kelime gecerliyse Flag hesaplat ve boyat
-      if (!response) {
+      if (!response && mounted) {
         showToast(
           'Geçersiz Sözcük',
           alignment: Alignment.center,
@@ -83,22 +84,26 @@ class _PuzzlePageState extends State<PuzzlePage> {
           textController.text = '';
         } else {
           if (activeFlag.contains(0) || activeFlag.contains(-1)) {
-            showToast(
-              'ÜZGÜNÜM BU KEZ OLMADI',
-              context: context,
-              position: StyledToastPosition.center,
-              animation: StyledToastAnimation.scale,
-            );
+            if (mounted) {
+              showToast(
+                            'ÜZGÜNÜM BU KEZ OLMADI',
+                            context: context,
+                            position: StyledToastPosition.center,
+                            animation: StyledToastAnimation.scale,
+                          );
+            }
             setState(() {
               gameOver = true;
             });
           } else {
-            showToast(
-              'BRAVO :)',
-              context: context,
-              position: StyledToastPosition.top,
-              animation: StyledToastAnimation.scale,
-            );
+            if (mounted) {
+              showToast(
+                            'BRAVO :)',
+                            context: context,
+                            position: StyledToastPosition.top,
+                            animation: StyledToastAnimation.scale,
+                          );
+            }
             setState(() {
               gameOver = true;
             });
@@ -180,10 +185,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
 //       }
 //     });
 
-    ScreenUtil.init(
-      context,
-      designSize: const Size(390, 840),
-    );
     return SafeArea(
       child: Scaffold(
         // appBar: AppBar(actions: [
@@ -216,19 +217,25 @@ class _PuzzlePageState extends State<PuzzlePage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  ...tableState
-                      .map((wordle) => WordleWidget(wordle: wordle))
-                      .toList(),
-                  const Spacer(),
-                  KeyBoardWidget(
-                    textController: textController,
-                    handleEnter: handleEnter,
-                  )
-                ],
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 450),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    Column(children: tableState
+                        .map((wordle) => WordleWidget(wordle: wordle))
+                        .toList(),),
+                    // ...tableState
+                    //     .map((wordle) => WordleWidget(wordle: wordle))
+                    //     .toList(),
+                    const Spacer(),
+                    KeyBoardWidget(
+                      textController: textController,
+                      handleEnter: handleEnter,
+                    )
+                  ],
+                ),
               ),
               if (gameOver)
                 Container(
@@ -247,7 +254,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24)),
                   //height: 200.h,
-                  width: 320.w,
+                  width: 320,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -261,7 +268,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                         child: Text(
                           'TEKRAR OYNA',
                           style:
-                              TextStyle(fontSize: 30.sp, color: Colors.green),
+                              TextStyle(fontSize: 30, color: Colors.green),
                         ),
                       ),
                       // TextButton(
@@ -327,19 +334,19 @@ class CharBox extends StatelessWidget {
                 ? Colors.blueGrey.shade300
                 : Colors.yellow.shade700;
     return AnimatedContainer(
-      margin: EdgeInsets.all(2.w),
+      margin: EdgeInsets.all(2),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5.w)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
         color: color,
       ),
-      width: 60.w,
-      height: 60.w,
+      width: 60,
+      height: 60,
       duration: const Duration(milliseconds: 400),
       child: Center(
           child: Text(
         letter.char,
         style: TextStyle(
-            fontSize: 34.sp, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
       )),
     );
   }
