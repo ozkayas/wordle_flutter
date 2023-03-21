@@ -1,12 +1,13 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wordle_flutter/models/wordle.dart';
 import 'package:http/http.dart' as http;
 import 'package:wordle_flutter/words.dart';
@@ -114,7 +115,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
   Future<bool> isValid(String wordle) async {
     // TODO: https://sozluk.gov.tr/gts?ara=kaput
     // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
-    print(wordle.toLowerCaseTr());
+    if (kDebugMode) {
+      print(wordle.toLowerCaseTr());
+    }
     var url =
         Uri.parse('https://sozluk.gov.tr/gts?ara=${wordle.toLowerCaseTr()}');
     var response = await http.read(url);
@@ -167,24 +170,20 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   @override
   Widget build(BuildContext context) {
-    final flutterWebviewPlugin = FlutterWebviewPlugin();
-
-    flutterWebviewPlugin.onStateChanged.listen((viewState) async {
-      if (viewState.type == WebViewState.finishLoad) {
-        flutterWebviewPlugin.evalJavascript(
-            '''<script language="JavaScript" type="text/javascript">\$('.tdk-search-input').val('liyakat')
-\$('.btdk-srch').click()'</script>''');
-      }
-    });
+//     final flutterWebviewPlugin = FlutterWebviewPlugin();
+//
+//     flutterWebviewPlugin.onStateChanged.listen((viewState) async {
+//       if (viewState.type == WebViewState.finishLoad) {
+//         flutterWebviewPlugin.evalJavascript(
+//             '''<script language="JavaScript" type="text/javascript">\$('.tdk-search-input').val('liyakat')
+// \$('.btdk-srch').click()'</script>''');
+//       }
+//     });
 
     ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: const Size(390, 840),
-        context: context,
-        minTextAdapt: true,
-        orientation: Orientation.portrait);
+      context,
+      designSize: const Size(390, 840),
+    );
     return SafeArea(
       child: Scaffold(
         // appBar: AppBar(actions: [
