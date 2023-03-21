@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:wordle_flutter/models/wordle.dart';
@@ -186,114 +187,123 @@ class _PuzzlePageState extends State<PuzzlePage> {
 //     });
 
     return SafeArea(
-      child: Scaffold(
-        // appBar: AppBar(actions: [
-        //   IconButton(
-        //       onPressed: () async {
-        //         await flutterWebviewPlugin.launch(
-        //           'https://sozluk.gov.tr',
-        //         );
-        //         // // await Navigator.of(context).push(MaterialPageRoute(
-        //         // //     builder: (context) => WebviewScaffold(
-        //         // //           url: "https://sozluk.gov.tr",
-        //         // //           appBar: AppBar(
-        //         // //             title: const Text("TDK"),
-        //         // //           ),
-        //         // //         )));
+      child: RawKeyboardListener(
+        autofocus: true,
+        focusNode: FocusNode(),
+        onKey: (event){
+          if(event.isKeyPressed(LogicalKeyboardKey.enter)){
+            print("enter pressed");
+          }
+        },
+        child: Scaffold(
+          // appBar: AppBar(actions: [
+          //   IconButton(
+          //       onPressed: () async {
+          //         await flutterWebviewPlugin.launch(
+          //           'https://sozluk.gov.tr',
+          //         );
+          //         // // await Navigator.of(context).push(MaterialPageRoute(
+          //         // //     builder: (context) => WebviewScaffold(
+          //         // //           url: "https://sozluk.gov.tr",
+          //         // //           appBar: AppBar(
+          //         // //             title: const Text("TDK"),
+          //         // //           ),
+          //         // //         )));
 
-        //         // flutterWebviewPlugin.evalJavascript(
-        //         //     '<script language="JavaScript" type="text/javascript">alert("Hello World")</script>');
+          //         // flutterWebviewPlugin.evalJavascript(
+          //         //     '<script language="JavaScript" type="text/javascript">alert("Hello World")</script>');
 
-        //         // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
-        //         // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
+          //         // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
+          //         // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
 
-        //         // if (await canLaunch(url)) {
-        //         //   launch(url);
-        //         // }
-        //       },
-        //       icon: Icon(Icons.navigate_next))
-        // ]),
-        body: Center(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 450),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Spacer(),
-                    Column(children: tableState
-                        .map((wordle) => WordleWidget(wordle: wordle))
-                        .toList(),),
-                    // ...tableState
-                    //     .map((wordle) => WordleWidget(wordle: wordle))
-                    //     .toList(),
-                    const Spacer(),
-                    KeyBoardWidget(
-                      textController: textController,
-                      handleEnter: handleEnter,
-                    )
-                  ],
-                ),
-              ),
-              if (gameOver)
-                Container(
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black38,
-                          offset: Offset(
-                            5.0,
-                            5.0,
-                          ),
-                          blurRadius: 10.0,
-                          spreadRadius: 2.0,
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24)),
-                  //height: 200.h,
-                  width: 320,
+          //         // if (await canLaunch(url)) {
+          //         //   launch(url);
+          //         // }
+          //       },
+          //       icon: Icon(Icons.navigate_next))
+          // ]),
+          body: Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 450),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            resetGame();
-                            gameOver = false;
-                          });
-                        },
-                        child: Text(
-                          'TEKRAR OYNA',
-                          style:
-                              TextStyle(fontSize: 30, color: Colors.green),
-                        ),
-                      ),
-                      // TextButton(
-                      //   child: Text(
-                      //       'Sözlükte Aç:${textController.text.toLowerCaseTr()}'),
-                      //   onPressed: () {
-                      //     Navigator.of(context).push(MaterialPageRoute(
-                      //         builder: (context) => WebviewScaffold(
-                      //               url: "https://www.google.com",
-                      //               appBar: new AppBar(
-                      //                 title: new Text("Widget webview"),
-                      //               ),
-                      //             )));
-                      //     // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
-                      //     // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
-
-                      //     // if (await canLaunch(url)) {
-                      //     //   launch(url);
-                      //     // }
-                      //   },
-                      // )
+                      const Spacer(),
+                      Column(children: tableState
+                          .map((wordle) => WordleWidget(wordle: wordle))
+                          .toList(),),
+                      // ...tableState
+                      //     .map((wordle) => WordleWidget(wordle: wordle))
+                      //     .toList(),
+                      const Spacer(),
+                      KeyBoardWidget(
+                        textController: textController,
+                        handleEnter: handleEnter,
+                      )
                     ],
                   ),
-                )
-            ],
+                ),
+                if (gameOver)
+                  Container(
+                    decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black38,
+                            offset: Offset(
+                              5.0,
+                              5.0,
+                            ),
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24)),
+                    //height: 200.h,
+                    width: 320,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              resetGame();
+                              gameOver = false;
+                            });
+                          },
+                          child: Text(
+                            'TEKRAR OYNA',
+                            style:
+                                TextStyle(fontSize: 30, color: Colors.green),
+                          ),
+                        ),
+                        // TextButton(
+                        //   child: Text(
+                        //       'Sözlükte Aç:${textController.text.toLowerCaseTr()}'),
+                        //   onPressed: () {
+                        //     Navigator.of(context).push(MaterialPageRoute(
+                        //         builder: (context) => WebviewScaffold(
+                        //               url: "https://www.google.com",
+                        //               appBar: new AppBar(
+                        //                 title: new Text("Widget webview"),
+                        //               ),
+                        //             )));
+                        //     // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
+                        //     // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
+
+                        //     // if (await canLaunch(url)) {
+                        //     //   launch(url);
+                        //     // }
+                        //   },
+                        // )
+                      ],
+                    ),
+                  )
+              ],
+            ),
           ),
         ),
       ),
