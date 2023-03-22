@@ -35,7 +35,7 @@ class _KeyBoardWidgetState extends State<KeyBoardWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 15 ),
+      padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 15 ),
       child: BlocBuilder<KeyboardCubit, Map<String, LetterState>>(
         builder: (context, state) {
           return BuiltInKeyboard(

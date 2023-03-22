@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_flutter/puzzle_page.dart';
 
 import 'features/keyboard/keyboard_cubit.dart';
-import 'features/table/table_cubit.dart';
+import 'features/table/cubit/table_cubit.dart';
 
 void main() {
   runApp(const MyApp());

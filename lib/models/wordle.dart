@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../features/table/models/letter.dart';
+
 class Wordle {
   List<Letter> letters = List.filled(5, Letter.empty());
 
@@ -10,14 +12,8 @@ class Wordle {
   }
 }
 
-class Letter {
-  String char;
-  int flag;
 
-  Letter(this.char, this.flag);
-  Letter.empty([this.char = '', this.flag = 2]);
-}
-
+/// TODO: Why this method is outside of the class???
 /// iki string alip trial ve target [1,0,0,-1,1] seklinda sonuc donen bi comparator lazim
 List<int> calculateFlag(String target, String wordle,
     [Function(String letter)? paintLetter]) {

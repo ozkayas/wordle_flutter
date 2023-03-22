@@ -15,6 +15,8 @@ import 'package:turkish/turkish.dart';
 
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
+import 'features/table/models/letter.dart';
+import 'features/table/widgets/wordle_widget.dart';
 
 class PuzzlePage extends StatefulWidget {
   const PuzzlePage({Key? key}) : super(key: key);
@@ -187,6 +189,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
 //     });
 
     return SafeArea(
+      // https://www.youtube.com/watch?v=5ykfmHhJUu4
       child: RawKeyboardListener(
         autofocus: true,
         focusNode: FocusNode(),
@@ -196,7 +199,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
           }
         },
         child: Scaffold(
-          // appBar: AppBar(actions: [
+/*          // appBar: AppBar(actions: [
           //   IconButton(
           //       onPressed: () async {
           //         await flutterWebviewPlugin.launch(
@@ -221,13 +224,13 @@ class _PuzzlePageState extends State<PuzzlePage> {
           //         // }
           //       },
           //       icon: Icon(Icons.navigate_next))
-          // ]),
+          // ]),*/
           body: Center(
             child: Stack(
               alignment: Alignment.center,
               children: [
                 ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 450),
+                  constraints: const BoxConstraints(maxWidth: 450),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -274,7 +277,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                               gameOver = false;
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             'TEKRAR OYNA',
                             style:
                                 TextStyle(fontSize: 30, color: Colors.green),
@@ -311,53 +314,3 @@ class _PuzzlePageState extends State<PuzzlePage> {
   }
 }
 
-// A row of 5 CharBoxes
-class WordleWidget extends StatelessWidget {
-  const WordleWidget({Key? key, required this.wordle}) : super(key: key);
-  final Wordle wordle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:
-            wordle.letters.map((letter) => CharBox(letter: letter)).toList());
-  }
-}
-
-// Visual Box for Letter objects
-//
-class CharBox extends StatelessWidget {
-  const CharBox({
-    Key? key,
-    required this.letter,
-  }) : super(key: key);
-  final Letter letter;
-
-  @override
-  Widget build(BuildContext context) {
-    final Color color = letter.flag == 0
-        ? Colors.blueGrey.shade700
-        : letter.flag == 1
-            ? Colors.lightGreen
-            : letter.flag == 2
-                ? Colors.blueGrey.shade300
-                : Colors.yellow.shade700;
-    return AnimatedContainer(
-      margin: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: color,
-      ),
-      width: 60,
-      height: 60,
-      duration: const Duration(milliseconds: 400),
-      child: Center(
-          child: Text(
-        letter.char,
-        style: TextStyle(
-            fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
-      )),
-    );
-  }
-}
