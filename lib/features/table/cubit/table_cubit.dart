@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turkish/turkish.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/letter.dart';
 
@@ -48,8 +53,9 @@ class TableCubit extends Cubit<TableState> {
     emit(newTableState);
   }
 
-  void enterOnTap() {
+  Future<void> enterOnTap() async{
     if (activeText.trimRight().length < 5) return;
+
 
     List<Letter> list = colorizeLettersForIndex(activeWordIndex);
     List<List<Letter>> allNewList = [...?state.wordsAsLetters];
@@ -66,6 +72,8 @@ class TableCubit extends Cubit<TableState> {
 
   void resetTable() {
     targetWord = "KALEM";
+    //   targetWord = targets[Random().nextInt(targets.length)];
+
 
     activeWordIndex = 0;
     activeText = '';
@@ -125,4 +133,30 @@ class TableCubit extends Cubit<TableState> {
 
     return letters;
   }
+
+  // ///Check if the entered word is valid
+  // Future<bool> isActiveTextValid() async {
+  //
+  //   // TODO: https://sozluk.gov.tr/gts?ara=kaput
+  //   // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
+  //   if (kDebugMode) {
+  //     print(activeText.toLowerCaseTr());
+  //   }
+  //
+  //   if (activeText.length == 5) {
+  //     var url = Uri.parse('https://sozluk.gov.tr/gts?ara=${activeText.toLowerCaseTr()}');
+  //     var response = await http.read(url);
+  //     var decodedResponse = jsonDecode(response);
+  //
+  //     if (decodedResponse is List) {
+  //       return true;
+  //     } else if (decodedResponse is Map<String, dynamic> && decodedResponse.containsKey('error')) {
+  //       return false;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  //
+  //   return false;
+  // }
 }

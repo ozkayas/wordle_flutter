@@ -6,8 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:turkish/turkish.dart';
+import 'package:wordle_flutter/words_repository.dart';
 
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
@@ -45,9 +47,9 @@ class _PuzzleViewState extends State<PuzzleView> {
     super.initState();
 
     cubit = context.read<TableCubit>();
+    cubit.initTextEditingController();
     cubit.resetTable();
 
-    cubit.initTextEditingController();
 
     cubit.textController.addListener(() {
       if (cubit.textController.text.length > 5) {
@@ -57,7 +59,8 @@ class _PuzzleViewState extends State<PuzzleView> {
       // context.read<TableCubit>().resetTable();
     });
   }
-@override
+
+  @override
   void dispose() {
     cubit.textController.dispose();
     super.dispose();
@@ -68,7 +71,6 @@ class _PuzzleViewState extends State<PuzzleView> {
     _keyboardCubit = BlocProvider.of<KeyboardCubit>(context);
     super.didChangeDependencies();
   }
-
 
   // void handleEnter() async {
   //   // 5 harf de girilmis mi?
@@ -129,33 +131,8 @@ class _PuzzleViewState extends State<PuzzleView> {
   //   }
   // }
 
-  // void resetTarget() {
-  //   target = targets[Random().nextInt(targets.length)];
-  // }
-
-  Future<bool> isValid(String wordle) async {
-    // TODO: https://sozluk.gov.tr/gts?ara=kaput
-    // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
-    if (kDebugMode) {
-      print(wordle.toLowerCaseTr());
-    }
-    var url = Uri.parse('https://sozluk.gov.tr/gts?ara=${wordle.toLowerCaseTr()}');
-    var response = await http.read(url);
-    var decodedResponse = jsonDecode(response);
-
-    if (decodedResponse is List) {
-      return true;
-    } else if (decodedResponse is Map<String, dynamic> && decodedResponse.containsKey('error')) {
-      return false;
-    } else {
-      return false;
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       // https://www.youtube.com/watch?v=5ykfmHhJUu4
       child: RawKeyboardListener(
@@ -170,10 +147,14 @@ class _PuzzleViewState extends State<PuzzleView> {
           appBar: AppBar(
             actions: [
               TextButton(
-                onPressed:() {
+                onPressed: () {
                   cubit.textController.clear();
-                  cubit.resetTable;},
-                child: const Text("Reset", style: TextStyle(color: Colors.black),),
+                  cubit.resetTable;
+                },
+                child: const Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ],
           ),
@@ -190,17 +171,32 @@ class _PuzzleViewState extends State<PuzzleView> {
                       BlocBuilder<TableCubit, TableState>(
                         builder: (context, state) {
                           return Column(
-                            children: state.wordsAsLetters!.map((wordAsLetter) => WordleWidget(
-                              word: '',
-                              letters: wordAsLetter,
-                            )).toList(),
+                            children: state.wordsAsLetters!
+                                .map((wordAsLetter) => WordleWidget(
+                                      word: '',
+                                      letters: wordAsLetter,
+                                    ))
+                                .toList(),
                           );
                         },
                       ),
                       const Spacer(),
                       KeyBoardWidget(
                         textController: context.read<TableCubit>().textController,
-                        handleEnter: context.read<TableCubit>().enterOnTap, //handleEnter,
+                        handleEnter: () async {
+                          bool isValid = WordsRepository.targets.contains(cubit.activeText.toLowerCaseTr());
+                          // bool isValid = await cubit.isActiveTextValid();
+                          if (!isValid && mounted) {
+                            showToast(
+                              'Geçersiz Sözcük',
+                              alignment: Alignment.center,
+                              position: StyledToastPosition.center,
+                              context: context,
+                              animation: StyledToastAnimation.scale,
+                            );
+                          }
+                          cubit.enterOnTap();
+                        }, //handleEnter,
                       )
                     ],
                   ),

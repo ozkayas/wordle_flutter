@@ -3,7 +3,7 @@
 
 class WordsRepository {
 
-  List<String> targets = [
+  static List<String> targets = [
     'abacı',
     'abalı',
     'abdal',
