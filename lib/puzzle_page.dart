@@ -37,19 +37,7 @@ class _PuzzleViewState extends State<PuzzleView> {
   //Game is over
   bool gameOver = false;
 
-  late String target;
   late TableCubit cubit;
-
-  //counter holds which wordle is active [0 .. 5]
-  //each row of the table is a wordle
-  int activeLine = 0;
-
-  //wordle text length
-  int maxChar = 5;
-  // TextEditingController textController = TextEditingController();
-  // List<Wordle> tableState = List.generate(
-  //     6, (_) => Wordle(List<Letter>.generate(5, (_) => Letter.empty())));
-
   late KeyboardCubit _keyboardCubit;
 
   @override
@@ -81,16 +69,6 @@ class _PuzzleViewState extends State<PuzzleView> {
     super.didChangeDependencies();
   }
 
-
-  // void resetGame() {
-  //   //TODO: reset keyboard state also
-  //   BlocProvider.of<KeyboardCubit>(context).resetKeyboardState();
-  //   resetTarget();
-  //   activeLine = 0;
-  //   textController.text = '';
-  //   tableState = List.generate(
-  //       6, (_) => Wordle(List<Letter>.generate(5, (_) => Letter.empty())));
-  // }
 
   // void handleEnter() async {
   //   // 5 harf de girilmis mi?
@@ -174,29 +152,9 @@ class _PuzzleViewState extends State<PuzzleView> {
     }
   }
 
-  // Method paints boxes after a word is checked according to flags
-  // Future<void> paintBoxes(List<int> flags) async {
-  //   for (var i = 0; i < flags.length; i++) {
-  //     tableState[activeLine].lettersList[i].flag = flags[i];
-  //     _keyboardCubit.paintLetter(
-  //         tableState[activeLine].lettersList[i].char, flags[i]);
-  //   }
-  //   setState(() {});
-  //   await Future.delayed(const Duration(milliseconds: 500));
-  //   return Future.value();
-  // }
 
   @override
   Widget build(BuildContext context) {
-//     final flutterWebviewPlugin = FlutterWebviewPlugin();
-//
-//     flutterWebviewPlugin.onStateChanged.listen((viewState) async {
-//       if (viewState.type == WebViewState.finishLoad) {
-//         flutterWebviewPlugin.evalJavascript(
-//             '''<script language="JavaScript" type="text/javascript">\$('.tdk-search-input').val('liyakat')
-// \$('.btdk-srch').click()'</script>''');
-//       }
-//     });
 
     return SafeArea(
       // https://www.youtube.com/watch?v=5ykfmHhJUu4
@@ -209,32 +167,6 @@ class _PuzzleViewState extends State<PuzzleView> {
           }
         },
         child: Scaffold(
-/*          // appBar: AppBar(actions: [
-          //   IconButton(
-          //       onPressed: () async {
-          //         await flutterWebviewPlugin.launch(
-          //           'https://sozluk.gov.tr',
-          //         );
-          //         // // await Navigator.of(context).push(MaterialPageRoute(
-          //         // //     builder: (context) => WebviewScaffold(
-          //         // //           url: "https://sozluk.gov.tr",
-          //         // //           appBar: AppBar(
-          //         // //             title: const Text("TDK"),
-          //         // //           ),
-          //         // //         )));
-
-          //         // flutterWebviewPlugin.evalJavascript(
-          //         //     '<script language="JavaScript" type="text/javascript">alert("Hello World")</script>');
-
-          //         // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
-          //         // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
-
-          //         // if (await canLaunch(url)) {
-          //         //   launch(url);
-          //         // }
-          //       },
-          //       icon: Icon(Icons.navigate_next))
-          // ]),*/
           appBar: AppBar(
             actions: [
               TextButton(
@@ -260,16 +192,8 @@ class _PuzzleViewState extends State<PuzzleView> {
                           return Column(
                             children: state.wordsAsLetters!.map((wordAsLetter) => WordleWidget(
                               word: '',
-                              // targetWord: '',
                               letters: wordAsLetter,
                             )).toList(),
-                            // children: state.words
-                            //     .map((wordle) => WordleWidget(
-                            //           word: wordle,
-                            //           targetWord: state.targetWord,
-                            //
-                            //         ))
-                            //     .toList(),
                           );
                         },
                       ),
@@ -311,25 +235,6 @@ class _PuzzleViewState extends State<PuzzleView> {
                             style: TextStyle(fontSize: 30, color: Colors.green),
                           ),
                         ),
-                        // TextButton(
-                        //   child: Text(
-                        //       'Sözlükte Aç:${textController.text.toLowerCaseTr()}'),
-                        //   onPressed: () {
-                        //     Navigator.of(context).push(MaterialPageRoute(
-                        //         builder: (context) => WebviewScaffold(
-                        //               url: "https://www.google.com",
-                        //               appBar: new AppBar(
-                        //                 title: new Text("Widget webview"),
-                        //               ),
-                        //             )));
-                        //     // final url = 'https://sozluk.gov.tr/gts?ara=hacim';
-                        //     // // 'https://sozluk.gov.tr/gts?ara=${textController.text.toLowerCaseTr()}';
-
-                        //     // if (await canLaunch(url)) {
-                        //     //   launch(url);
-                        //     // }
-                        //   },
-                        // )
                       ],
                     ),
                   )

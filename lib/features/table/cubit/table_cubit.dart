@@ -65,37 +65,23 @@ class TableCubit extends Cubit<TableState> {
   }
 
   void resetTable() {
-    // targetWord = targets[Random().nextInt(targets.length)];
     targetWord = "KALEM";
 
     activeWordIndex = 0;
     activeText = '';
+    textController.clear();
 
     emit(TableState.initial());
+
+    //todo: reset keyboard also
   }
 
-  ///Convert List<String> words of the state to List<List<Letter>> wordsAsLetters
-  List<List<Letter>> lettersFromWordsList(List<String> words) {
-    List<List<Letter>> result = [];
-
-    for (int i = activeWordIndex; i<words.length; i++) {
-    // for (String word in words) {
-      List<Letter> list = [];
-      for (int j = 0; j < words[i].length; j++) {
-        list.add(Letter(char: words[i][j], flag: 2));
-      }
-      result.add(list);
-    }
-    return result;
-  }
 
   ///Convert List<String> words of the state to List<List<Letter>> wordsAsLetters
   List<Letter> lettersFromWord(String word) {
     List<Letter> result = [];
 
     for (int i = 0; i < word.length; i++) {
-      // for (String word in words) {
-
       result.add(Letter(char: word[i], flag: 2));
     }
     return result;
@@ -103,8 +89,7 @@ class TableCubit extends Cubit<TableState> {
 
   ///Colorizes the letter of a selected row, after calculations
   List<Letter> colorizeLettersForIndex(int index) {
-    //String target = 'E V R A K';
-    //String wordle = 'D A C C E';
+
     List<int> flags = [0, 0, 0, 0, 0];
 
     var wordAsList = activeText.split('');
