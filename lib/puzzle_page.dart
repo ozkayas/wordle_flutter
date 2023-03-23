@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
-import 'package:wordle_flutter/words_repository.dart';
+import 'package:wordle_flutter/repositories/words_repository.dart';
 
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
@@ -91,20 +91,20 @@ class _PuzzleViewState extends State<PuzzleView> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              TextButton(
-                onPressed: () {
-                  cubit.textController.clear();
-                  cubit.resetTable;
-                },
-                child: const Text(
-                  "Reset",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ],
-          ),
+          // appBar: AppBar(
+          //   actions: [
+          //     TextButton(
+          //       onPressed: () {
+          //         cubit.textController.clear();
+          //         cubit.resetTable;
+          //       },
+          //       child: const Text(
+          //         "Reset",
+          //         style: TextStyle(color: Colors.black),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           body: Center(
             child: ValueListenableBuilder<bool>(
                 valueListenable: cubit.isGameOver,
