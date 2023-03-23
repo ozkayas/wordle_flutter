@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:turkish/turkish.dart';
+import 'package:wordle_flutter/words_repository.dart';
 
 import '../models/letter.dart';
 
@@ -10,6 +14,7 @@ part 'table_state.dart';
 class TableCubit extends Cubit<TableState> {
   TableCubit() : super(TableState.initial());
 
+  ValueNotifier<bool> isGameOver = ValueNotifier<bool>(false);
   late final TextEditingController textController;
   String targetWord = '';
 
@@ -69,6 +74,7 @@ class TableCubit extends Cubit<TableState> {
         context: context,
         animation: StyledToastAnimation.scale,
       );
+      isGameOver.value = true;
     } else if (activeWordIndex == 5) {
       /// we are at the bottom on the list, and all letters are not green
       /// Game OVer
@@ -79,7 +85,8 @@ class TableCubit extends Cubit<TableState> {
         context: context,
         animation: StyledToastAnimation.scale,
       );
-    }else{
+      isGameOver.value = true;
+    } else {
       activeWordIndex++;
       activeText = '';
       textController.clear();
@@ -87,14 +94,16 @@ class TableCubit extends Cubit<TableState> {
   }
 
   void resetTable() {
-    targetWord = "KALEM";
-    //   targetWord = targets[Random().nextInt(targets.length)];
+    // targetWord = "KALEM";
+      targetWord = WordsRepository.targets[Random().nextInt(WordsRepository.targets.length)].toUpperCaseTr();
 
     activeWordIndex = 0;
     activeText = '';
     textController.clear();
+    isGameOver.value=false;
 
     emit(TableState.initial());
+
 
     //todo: reset keyboard also
   }

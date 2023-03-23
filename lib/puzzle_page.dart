@@ -2,12 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:http/http.dart' as http;
 import 'package:turkish/turkish.dart';
 import 'package:wordle_flutter/words_repository.dart';
 
@@ -159,83 +157,87 @@ class _PuzzleViewState extends State<PuzzleView> {
             ],
           ),
           body: Center(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 450),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Spacer(),
-                      BlocBuilder<TableCubit, TableState>(
-                        builder: (context, state) {
-                          return Column(
-                            children: state.wordsAsLetters!
-                                .map((wordAsLetter) => WordleWidget(
-                                      word: '',
-                                      letters: wordAsLetter,
-                                    ))
-                                .toList(),
-                          );
-                        },
-                      ),
-                      const Spacer(),
-                      KeyBoardWidget(
-                        textController: context.read<TableCubit>().textController,
-                        handleEnter: () async {
-                          bool isValid = WordsRepository.targets.contains(cubit.activeText.toLowerCaseTr());
-                          // bool isValid = await cubit.isActiveTextValid();
-                          if (!isValid && mounted) {
-                            showToast(
-                              'Geçersiz Sözcük',
-                              alignment: Alignment.center,
-                              position: StyledToastPosition.center,
-                              context: context,
-                              animation: StyledToastAnimation.scale,
-                            );
-                            return;
-                          }
-                          cubit.enterOnTap(context);
-                        }, //handleEnter,
-                      )
-                    ],
-                  ),
-                ),
-                if (gameOver)
-                  Container(
-                    decoration: BoxDecoration(boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black38,
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
-                      ),
-                    ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
-                    //height: 200.h,
-                    width: 320,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            // setState(() {
-                            context.read<TableCubit>().resetTable();
-                            gameOver = false;
-                            // });
-                          },
-                          child: const Text(
-                            'TEKRAR OYNA',
-                            style: TextStyle(fontSize: 30, color: Colors.green),
+            child: ValueListenableBuilder<bool>(
+              valueListenable: cubit.isGameOver,
+              builder: (context, gameOver, _) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 450),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Spacer(),
+                          BlocBuilder<TableCubit, TableState>(
+                            builder: (context, state) {
+                              return Column(
+                                children: state.wordsAsLetters!
+                                    .map((wordAsLetter) => WordleWidget(
+                                          word: '',
+                                          letters: wordAsLetter,
+                                        ))
+                                    .toList(),
+                              );
+                            },
                           ),
-                        ),
-                      ],
+                          const Spacer(),
+                          KeyBoardWidget(
+                            textController: context.read<TableCubit>().textController,
+                            handleEnter: () async {
+                              bool isValid = WordsRepository.targets.contains(cubit.activeText.toLowerCaseTr());
+                              // bool isValid = await cubit.isActiveTextValid();
+                              if (!isValid && mounted) {
+                                showToast(
+                                  'Geçersiz Sözcük',
+                                  alignment: Alignment.center,
+                                  position: StyledToastPosition.center,
+                                  context: context,
+                                  animation: StyledToastAnimation.scale,
+                                );
+                                return;
+                              }
+                              cubit.enterOnTap(context);
+                            }, //handleEnter,
+                          )
+                        ],
+                      ),
                     ),
-                  )
-              ],
+                    if (gameOver)
+                      Container(
+                        decoration: BoxDecoration(boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black38,
+                            offset: Offset(
+                              5.0,
+                              5.0,
+                            ),
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                          ),
+                        ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
+                        //height: 200.h,
+                        width: 320,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // setState(() {
+                                cubit.resetTable();
+                                // });
+                              },
+                              child: const Text(
+                                'TEKRAR OYNA',
+                                style: TextStyle(fontSize: 30, color: Colors.green),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                  ],
+                );
+              }
             ),
           ),
         ),
