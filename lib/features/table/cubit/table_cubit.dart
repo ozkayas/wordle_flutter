@@ -51,7 +51,7 @@ class TableCubit extends Cubit<TableState> {
     emit(newTableState);
   }
 
-  Future<void> enterOnTap(BuildContext context) async {
+  Future<void> enterOnTap(BuildContext context, void Function(List<Letter> activeLetters) paintKeyboard) async {
     if (activeText.trimRight().length < 5) return;
 
     List<Letter> list = colorizeLettersForIndex(activeWordIndex);
@@ -62,6 +62,7 @@ class TableCubit extends Cubit<TableState> {
     );
     // print(newState == state);
     emit(newState);
+    paintKeyboard.call(newState.wordsAsLetters![activeWordIndex]);
 
     /// burada oyun bitti mi kontrolleri olacak/
     /// eger aktif indexteki flagler 0 veya -1 icermiyorsa

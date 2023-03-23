@@ -40,7 +40,7 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
   //Harfler ver ilgili flag bilgisi 0,1,-1 buraya gelecek
   //Keyboard icin burada ayri degerlendirme yapilacak
   void paintLetter(String letter, int flag) {
-    var state = this.state;
+    // var state = this.state;
 
     // print('$letter,$flag,${state[letter]}');
 
@@ -61,7 +61,7 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
       }
     }
 
-    emit(state);
+    emit(Map<String, LetterState>.from(state));
   }
 
   void resetKeyboardState() => emit({
