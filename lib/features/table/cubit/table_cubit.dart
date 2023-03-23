@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turkish/turkish.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import '../models/letter.dart';
 
@@ -14,7 +10,7 @@ part 'table_state.dart';
 class TableCubit extends Cubit<TableState> {
   TableCubit() : super(TableState.initial());
 
-  late final TextEditingController  textController;
+  late final TextEditingController textController;
   String targetWord = '';
 
   /// We have 6 wordles in a Column, which one is active at the moment?
@@ -22,7 +18,7 @@ class TableCubit extends Cubit<TableState> {
   int activeWordIndex = 0;
   String activeText = '';
 
-  void initTextEditingController(){
+  void initTextEditingController() {
     textController = TextEditingController();
   }
 
@@ -35,15 +31,12 @@ class TableCubit extends Cubit<TableState> {
       activeText = text.substring(0, 5);
     }
 
-    print("===> Active Text:$activeText");
-    print(state.toString());
-
     /// fill active wordle with the activeText
     List<String> newWordsList = [...state.words];
     newWordsList[activeWordIndex] = activeText;
 
     var newLetterListForActiveIndex = List<Letter>.from(lettersFromWord(activeText));
-    var newWordsAsLetters =  List<List<Letter>>.from(state.wordsAsLetters!);
+    var newWordsAsLetters = List<List<Letter>>.from(state.wordsAsLetters!);
     newWordsAsLetters[activeWordIndex] = newLetterListForActiveIndex;
     final newTableState = state.copyWith(
       words: newWordsList,
@@ -53,9 +46,8 @@ class TableCubit extends Cubit<TableState> {
     emit(newTableState);
   }
 
-  Future<void> enterOnTap() async{
+  Future<void> enterOnTap(BuildContext context) async {
     if (activeText.trimRight().length < 5) return;
-
 
     List<Letter> list = colorizeLettersForIndex(activeWordIndex);
     List<List<Letter>> allNewList = [...?state.wordsAsLetters];
@@ -65,15 +57,38 @@ class TableCubit extends Cubit<TableState> {
     );
     // print(newState == state);
     emit(newState);
-    activeWordIndex++;
-    activeText = '';
-    textController.clear();
+
+    /// burada oyun bitti mi kontrolleri olacak/
+    /// eger aktif indexteki flagler 0 veya -1 icermiyorsa
+    ///
+    if (isAllLettersGreen(state.wordsAsLetters![activeWordIndex])) {
+      showToast(
+        'BRAVO 🎉',
+        alignment: Alignment.center,
+        position: StyledToastPosition.center,
+        context: context,
+        animation: StyledToastAnimation.scale,
+      );
+    } else if (activeWordIndex == 5) {
+      /// we are at the bottom on the list, and all letters are not green
+      /// Game OVer
+      showToast(
+        'GAME OVER ⛔️',
+        alignment: Alignment.center,
+        position: StyledToastPosition.center,
+        context: context,
+        animation: StyledToastAnimation.scale,
+      );
+    }else{
+      activeWordIndex++;
+      activeText = '';
+      textController.clear();
+    }
   }
 
   void resetTable() {
     targetWord = "KALEM";
     //   targetWord = targets[Random().nextInt(targets.length)];
-
 
     activeWordIndex = 0;
     activeText = '';
@@ -84,6 +99,13 @@ class TableCubit extends Cubit<TableState> {
     //todo: reset keyboard also
   }
 
+  bool isAllLettersGreen(List<Letter> letters) {
+    for (var letter in letters) {
+      if (letter.flag == 0 || letter.flag == -1) return false;
+    }
+
+    return true;
+  }
 
   ///Convert List<String> words of the state to List<List<Letter>> wordsAsLetters
   List<Letter> lettersFromWord(String word) {
@@ -97,7 +119,6 @@ class TableCubit extends Cubit<TableState> {
 
   ///Colorizes the letter of a selected row, after calculations
   List<Letter> colorizeLettersForIndex(int index) {
-
     List<int> flags = [0, 0, 0, 0, 0];
 
     var wordAsList = activeText.split('');
@@ -133,30 +154,4 @@ class TableCubit extends Cubit<TableState> {
 
     return letters;
   }
-
-  // ///Check if the entered word is valid
-  // Future<bool> isActiveTextValid() async {
-  //
-  //   // TODO: https://sozluk.gov.tr/gts?ara=kaput
-  //   // {"error":"Sonuç bulunamadı"} == hata gelirse donen response
-  //   if (kDebugMode) {
-  //     print(activeText.toLowerCaseTr());
-  //   }
-  //
-  //   if (activeText.length == 5) {
-  //     var url = Uri.parse('https://sozluk.gov.tr/gts?ara=${activeText.toLowerCaseTr()}');
-  //     var response = await http.read(url);
-  //     var decodedResponse = jsonDecode(response);
-  //
-  //     if (decodedResponse is List) {
-  //       return true;
-  //     } else if (decodedResponse is Map<String, dynamic> && decodedResponse.containsKey('error')) {
-  //       return false;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  //
-  //   return false;
-  // }
 }

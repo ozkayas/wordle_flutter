@@ -194,8 +194,9 @@ class _PuzzleViewState extends State<PuzzleView> {
                               context: context,
                               animation: StyledToastAnimation.scale,
                             );
+                            return;
                           }
-                          cubit.enterOnTap();
+                          cubit.enterOnTap(context);
                         }, //handleEnter,
                       )
                     ],
