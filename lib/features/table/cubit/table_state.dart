@@ -30,7 +30,7 @@ class TableState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [words, targetWord];
+  List<Object?> get props => [words, targetWord, wordsAsLetters];
 }
 
 extension Helper on TableState {

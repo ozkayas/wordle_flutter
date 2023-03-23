@@ -56,6 +56,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     super.initState();
 
     final cubit = context.read<TableCubit>();
+    cubit.resetTable();
     textController.addListener(() {
       if (textController.text.length > 5) {
         textController.text = textController.text.substring(0, 5);
@@ -265,7 +266,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                       const Spacer(),
                       KeyBoardWidget(
                         textController: textController,
-                        handleEnter: () {}, //handleEnter,
+                        handleEnter: context.read<TableCubit>().enterOnTap, //handleEnter,
                       )
                     ],
                   ),
