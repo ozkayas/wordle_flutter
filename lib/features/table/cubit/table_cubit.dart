@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/letter.dart';
 
 part 'table_state.dart';
 
@@ -26,13 +27,17 @@ class TableCubit extends Cubit<TableState> {
     print(activeText);
 
     /// fill active wordle with the activeText
-    List<String> newWordsList = [...state.wordles];
+    List<String> newWordsList = [...state.words];
     newWordsList[activeWordIndex] = activeText;
-    final newTableState = state.copyWith(wordles: newWordsList, targetWord: targetWord);
-    // print(newTableState.toString());
+    final newTableState = state.copyWith(
+      words: newWordsList,
+      targetWord: targetWord,
+      wordsAsLetters: lettersFromWordsList(newWordsList),
+    );
     emit(newTableState);
   }
 
+  void enterOnTap() {}
 
   void resetTable() {
     // targetWord = targets[Random().nextInt(targets.length)];
@@ -42,5 +47,20 @@ class TableCubit extends Cubit<TableState> {
     activeText = '';
 
     emit(TableState.initial());
+  }
+
+  ///Convert List<String> words of the state to List<List<Letter>> wordsAsLetters
+  List<List<Letter>> lettersFromWordsList(List<String> words){
+
+    List<List<Letter>> result = [];
+
+    for(String word in words){
+      List<Letter> list = [];
+      for (int i = 0; i < word.length; i++) {
+        list.add(Letter(char: word[i],flag: 2));
+      }
+      result.add(list);
+    }
+    return result;
   }
 }

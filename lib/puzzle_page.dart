@@ -247,18 +247,21 @@ class _PuzzleViewState extends State<PuzzleView> {
                       BlocBuilder<TableCubit, TableState>(
                         builder: (context, state) {
                           return Column(
-                            children: state.wordles
-                                .map((wordle) => WordleWidget(
-                                      word: wordle,
-                                      targetWord: state.targetWord,
-                                    ))
-                                .toList(),
+                            children: state.wordsAsLetters!.map((wordAsLetter) => WordleWidget(
+                              word: '',
+                              // targetWord: '',
+                              letters: wordAsLetter,
+                            )).toList(),
+                            // children: state.words
+                            //     .map((wordle) => WordleWidget(
+                            //           word: wordle,
+                            //           targetWord: state.targetWord,
+                            //
+                            //         ))
+                            //     .toList(),
                           );
                         },
                       ),
-                      // ...tableState
-                      //     .map((wordle) => WordleWidget(wordle: wordle))
-                      //     .toList(),
                       const Spacer(),
                       KeyBoardWidget(
                         textController: textController,
