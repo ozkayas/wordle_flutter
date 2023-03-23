@@ -1,15 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import '../features/table/models/letter.dart';
 
-class Wordle {
-  List<Letter> letters = List.filled(5, Letter.empty());
+class Wordle extends Equatable{
+  final String word;
 
-  Wordle(this.letters);
+  const Wordle({required this.word});
 
-  String asString() {
-    return letters.fold('', (prev, element) => prev + element.char);
+  Wordle copyWith({String? word}){
+    return Wordle(
+      word: word ?? this.word
+    );
   }
+
+  @override
+  List<Object?> get props => [word];
+}
+
+extension on Wordle {
+
 }
 
 

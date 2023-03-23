@@ -64,7 +64,7 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
     emit(state);
   }
 
-  void resetState() => emit({
+  void resetKeyboardState() => emit({
         'E': LetterState.light,
         'R': LetterState.light,
         'T': LetterState.light,
