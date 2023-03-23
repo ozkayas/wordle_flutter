@@ -125,7 +125,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                                   .read<TableCubit>()
                                   .textController,
                               handleEnter: () {
-                                bool isValid = WordsRepository.targets.contains(cubit.activeText.toLowerCaseTr());
+                                bool isValid = WordsRepository.targets.contains(cubit.activeText);
                                 if (!isValid && mounted) {
                                   showToast(
                                     'Geçersiz Sözcük',
@@ -143,6 +143,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                       ),
                       if (gameOver)
                         Container(
+                          padding: const EdgeInsets.all(32),
                           decoration: BoxDecoration(boxShadow: const [
                             BoxShadow(
                               color: Colors.black38,

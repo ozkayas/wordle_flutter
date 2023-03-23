@@ -35,7 +35,7 @@ class WordleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("=== building a wordle row");
+    // print("=== building a wordle row");
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: getCharBox());
   }
 }

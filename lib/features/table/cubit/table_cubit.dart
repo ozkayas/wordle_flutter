@@ -52,6 +52,7 @@ class TableCubit extends Cubit<TableState> {
   }
 
   Future<void> enterOnTap(BuildContext context, void Function(List<Letter> activeLetters) paintKeyboard) async {
+    print("target ==== > $targetWord");
     if (activeText.trimRight().length < 5) return;
 
     List<Letter> list = colorizeLettersForIndex(activeWordIndex);
