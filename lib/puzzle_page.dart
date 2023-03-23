@@ -38,6 +38,7 @@ class _PuzzleViewState extends State<PuzzleView> {
   bool gameOver = false;
 
   late String target;
+  late TableCubit cubit;
 
   //counter holds which wordle is active [0 .. 5]
   //each row of the table is a wordle
@@ -45,7 +46,7 @@ class _PuzzleViewState extends State<PuzzleView> {
 
   //wordle text length
   int maxChar = 5;
-  TextEditingController textController = TextEditingController();
+  // TextEditingController textController = TextEditingController();
   // List<Wordle> tableState = List.generate(
   //     6, (_) => Wordle(List<Letter>.generate(5, (_) => Letter.empty())));
 
@@ -55,15 +56,23 @@ class _PuzzleViewState extends State<PuzzleView> {
   void initState() {
     super.initState();
 
-    final cubit = context.read<TableCubit>();
+    cubit = context.read<TableCubit>();
     cubit.resetTable();
-    textController.addListener(() {
-      if (textController.text.length > 5) {
-        textController.text = textController.text.substring(0, 5);
+
+    cubit.initTextEditingController();
+
+    cubit.textController.addListener(() {
+      if (cubit.textController.text.length > 5) {
+        cubit.textController.text = cubit.textController.text.substring(0, 5);
       }
-      cubit.letterOnTap(textController.text);
+      cubit.letterOnTap(cubit.textController.text);
       // context.read<TableCubit>().resetTable();
     });
+  }
+@override
+  void dispose() {
+    cubit.textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,6 +80,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     _keyboardCubit = BlocProvider.of<KeyboardCubit>(context);
     super.didChangeDependencies();
   }
+
 
   // void resetGame() {
   //   //TODO: reset keyboard state also
@@ -229,8 +239,8 @@ class _PuzzleViewState extends State<PuzzleView> {
             actions: [
               TextButton(
                 onPressed:() {
-                  textController.clear();
-                  context.read<TableCubit>().resetTable;},
+                  cubit.textController.clear();
+                  cubit.resetTable;},
                 child: const Text("Reset", style: TextStyle(color: Colors.black),),
               ),
             ],
@@ -265,7 +275,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                       ),
                       const Spacer(),
                       KeyBoardWidget(
-                        textController: textController,
+                        textController: context.read<TableCubit>().textController,
                         handleEnter: context.read<TableCubit>().enterOnTap, //handleEnter,
                       )
                     ],
