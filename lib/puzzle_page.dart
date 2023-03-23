@@ -12,6 +12,7 @@ import 'package:wordle_flutter/words_repository.dart';
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
 import 'features/table/cubit/table_cubit.dart';
+import 'features/table/widgets/wordle_table.dart';
 import 'features/table/widgets/wordle_widget.dart';
 
 class PuzzlePage extends StatelessWidget {
@@ -169,24 +170,12 @@ class _PuzzleViewState extends State<PuzzleView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Spacer(),
-                          BlocBuilder<TableCubit, TableState>(
-                            builder: (context, state) {
-                              return Column(
-                                children: state.wordsAsLetters!
-                                    .map((wordAsLetter) => WordleWidget(
-                                          word: '',
-                                          letters: wordAsLetter,
-                                        ))
-                                    .toList(),
-                              );
-                            },
-                          ),
+                          const WordleTable(),
                           const Spacer(),
                           KeyBoardWidget(
                             textController: context.read<TableCubit>().textController,
-                            handleEnter: () async {
+                            handleEnter: () {
                               bool isValid = WordsRepository.targets.contains(cubit.activeText.toLowerCaseTr());
-                              // bool isValid = await cubit.isActiveTextValid();
                               if (!isValid && mounted) {
                                 showToast(
                                   'Geçersiz Sözcük',
@@ -245,3 +234,4 @@ class _PuzzleViewState extends State<PuzzleView> {
     );
   }
 }
+
