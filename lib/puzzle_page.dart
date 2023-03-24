@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +13,6 @@ import 'features/keyboard/keyboard_cubit.dart';
 import 'features/table/cubit/table_cubit.dart';
 import 'features/table/models/letter.dart';
 import 'features/table/widgets/wordle_table.dart';
-import 'features/table/widgets/wordle_widget.dart';
 
 class PuzzlePage extends StatelessWidget {
   const PuzzlePage({Key? key}) : super(key: key);
@@ -50,7 +48,6 @@ class _PuzzleViewState extends State<PuzzleView> {
     cubit.initTextEditingController();
     cubit.resetTable();
 
-
     cubit.textController.addListener(() {
       if (cubit.textController.text.length > 5) {
         cubit.textController.text = cubit.textController.text.substring(0, 5);
@@ -72,8 +69,8 @@ class _PuzzleViewState extends State<PuzzleView> {
     super.didChangeDependencies();
   }
 
-  void paintKeyboard(List<Letter> letters){
-    for(Letter letter in letters){
+  void paintKeyboard(List<Letter> letters) {
+    for (Letter letter in letters) {
       _keyboardCubit.paintLetter(letter.char, letter.flag);
     }
   }
@@ -86,8 +83,53 @@ class _PuzzleViewState extends State<PuzzleView> {
         autofocus: true,
         focusNode: FocusNode(),
         onKey: (event) {
-          if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-            print("enter pressed");
+          if (event is RawKeyDownEvent) {
+            /// enter ise
+            if (event.logicalKey == LogicalKeyboardKey.enter) {
+              bool isValid = WordsRepository.targets.contains(cubit.activeText);
+              if (!isValid && mounted) {
+                showToast(
+                  'Geçersiz Sözcük',
+                  alignment: Alignment.center,
+                  position: StyledToastPosition.center,
+                  context: context,
+                  animation: StyledToastAnimation.scale,
+                );
+                return;
+              }
+              cubit.enterOnTap(context, paintKeyboard);
+            }
+
+            /// delete ise
+            else if (event.logicalKey == LogicalKeyboardKey.backspace) {
+              String activeText = cubit.textController.text;
+              cubit.textController.text = activeText.substring(0, activeText.length - 1);
+            } else if (event.logicalKey.keyLabel.length == 1 &&
+                (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
+                    RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
+                    event.logicalKey.keyLabel == 'ı' ||
+                    event.logicalKey.keyLabel == 'I' ||
+                    event.logicalKey.keyLabel == 'ç' ||
+                    event.logicalKey.keyLabel == 'Ç' ||
+                    event.logicalKey.keyLabel == 'i' ||
+                    event.logicalKey.keyLabel == 'İ' ||
+                    event.logicalKey.keyLabel == 'ğ' ||
+                    event.logicalKey.keyLabel == 'Ğ' ||
+                    event.logicalKey.keyLabel == 'ö' ||
+                    event.logicalKey.keyLabel == 'Ö' ||
+                    event.logicalKey.keyLabel == 'ü' ||
+                    event.logicalKey.keyLabel == 'Ü' ||
+                    event.logicalKey.keyLabel == 'ş' ||
+                    event.logicalKey.keyLabel == 'Ş')) {
+              if (event.character != null) {
+                if (cubit.textController.text.length >= 5) {
+                  return;
+                }
+                String currentActiveText = cubit.textController.text;
+                currentActiveText += event.character!.toUpperCaseTr();
+                cubit.textController.text = currentActiveText;
+              }
+            }
           }
         },
         child: Scaffold(
@@ -121,9 +163,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                             const WordleTable(),
                             const Spacer(),
                             KeyBoardWidget(
-                              textController: context
-                                  .read<TableCubit>()
-                                  .textController,
+                              textController: context.read<TableCubit>().textController,
                               handleEnter: () {
                                 bool isValid = WordsRepository.targets.contains(cubit.activeText);
                                 if (!isValid && mounted) {
@@ -138,7 +178,8 @@ class _PuzzleViewState extends State<PuzzleView> {
                                 }
                                 cubit.enterOnTap(context, paintKeyboard);
                               }, //handleEnter,
-                            )                          ],
+                            )
+                          ],
                         ),
                       ),
                       if (gameOver)
@@ -175,12 +216,10 @@ class _PuzzleViewState extends State<PuzzleView> {
                         )
                     ],
                   );
-                }
-            ),
+                }),
           ),
         ),
       ),
     );
   }
 }
-
