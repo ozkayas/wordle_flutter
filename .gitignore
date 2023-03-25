@@ -29,7 +29,7 @@
 .packages
 .pub-cache/
 .pub/
-/build/*
+/build/
 !/build/web/
 
 # Web related
@@ -44,4 +44,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/build/
