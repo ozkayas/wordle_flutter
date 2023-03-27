@@ -1,16 +1,22 @@
-# wordle_flutter
+# A WORDLE FLUTTER 
 
-A new Flutter project.
+A Wordle clone in Turkish for Flutter Web & Mobile
 
-## Getting Started
+## A few words...
 
-This project is a starting point for a Flutter application.
+This app can be run on both mobile platforms and Web platform.
 
-A few resources to get you started if this is your first Flutter project:
+Web app can listen to the Turkish keyboard events.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+I tried to explore and implement BLoC library for state management, and used two Cubits for puzzle table & keyboard separately.
+Built-in keyboard is forked from pub.dev and converted to Turkish Q Type.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Potential improvements
+- Localization settings for EN, DE, etc. .
+- Dark Theme
+- Decoupling the Turkish keyboard as a separate package and publish it on pub.dev
+
+Here is the link if you'd like to give it a try:
+[Wordle TR 🧩](https://tangerine-gaufre-c70022.netlify.app/#/)
+
+<img width="704" alt="wordle_tr" src="https://user-images.githubusercontent.com/63163416/227967181-983401dd-7908-4ae8-b595-f3cc2a79418d.png">
