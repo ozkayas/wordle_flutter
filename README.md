@@ -1,6 +1,6 @@
 # A WORDLE FLUTTER 
 
-A Wordle clone in Turkish for Flutter Web & Mobile
+A mimimalist Wordle clone in Turkish for Flutter Web & Mobile
 
 ## A few words...
 
@@ -12,7 +12,7 @@ I tried to explore and implement BLoC library for state management, and used two
 Built-in keyboard is forked from pub.dev and converted to Turkish Q Type.
 
 ## Potential improvements
-- Localization settings for EN, DE, etc. .
+- Localizations for EN, DE, etc. .
 - Dark Theme
 - Decoupling the Turkish keyboard as a separate package and publish it on pub.dev
 
