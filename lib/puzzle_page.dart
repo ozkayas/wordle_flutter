@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,32 +153,34 @@ class _PuzzleViewState extends State<PuzzleView> {
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 450),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Spacer(),
-                            const WordleTable(),
-                            const Spacer(),
-                            KeyBoardWidget(
-                              textController: context.read<TableCubit>().textController,
-                              handleEnter: () {
-                                bool isValid = WordsRepository.targets.contains(cubit.activeText);
-                                if (!isValid && mounted) {
-                                  showToast(
-                                    'Geçersiz Sözcük',
-                                    alignment: Alignment.center,
-                                    position: StyledToastPosition.center,
-                                    context: context,
-                                    animation: StyledToastAnimation.scale,
-                                  );
-                                  return;
-                                }
-                                cubit.enterOnTap(context, paintKeyboard);
-                              }, //handleEnter,
-                            )
-                          ],
+                      Container(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 450),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              const WordleTable(),
+                              Spacer(),
+                              KeyBoardWidget(
+                                textController: context.read<TableCubit>().textController,
+                                handleEnter: () {
+                                  bool isValid = WordsRepository.targets.contains(cubit.activeText);
+                                  if (!isValid && mounted) {
+                                    showToast(
+                                      'Geçersiz Sözcük',
+                                      alignment: Alignment.center,
+                                      position: StyledToastPosition.center,
+                                      context: context,
+                                      animation: StyledToastAnimation.scale,
+                                    );
+                                    return;
+                                  }
+                                  cubit.enterOnTap(context, paintKeyboard);
+                                }, //handleEnter,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       if (gameOver)

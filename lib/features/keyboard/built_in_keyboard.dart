@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/enums.dart';
 
-
-class BuiltInKeyboard extends StatefulWidget {
+class BuiltInTRKeyboard extends StatefulWidget {
   // layoutType of the keyboard
   final String layoutType;
 
@@ -24,6 +23,7 @@ class BuiltInKeyboard extends StatefulWidget {
   final TextStyle letterStyle;
 
   // the additional key that can be added to the keyboard
+  // not in use actively at the moment
   final bool enableSpaceBar;
   final bool enableBackSpace;
   final bool enableCapsLock;
@@ -49,7 +49,8 @@ class BuiltInKeyboard extends StatefulWidget {
 
   final Map<String, LetterState> letterStatus;
 
-  const BuiltInKeyboard({super.key,
+  const BuiltInTRKeyboard({
+    super.key,
     required this.controller,
     required this.layoutType,
     required this.handleEnter,
@@ -69,10 +70,10 @@ class BuiltInKeyboard extends StatefulWidget {
     this.splashColor,
   });
   @override
-  BuiltInKeyboardState createState() => BuiltInKeyboardState();
+  BuiltInTRKeyboardState createState() => BuiltInTRKeyboardState();
 }
 
-class BuiltInKeyboardState extends State<BuiltInKeyboard> {
+class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
   late double height;
   late double width;
   bool capsLockUppercase = false;
@@ -94,19 +95,17 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
           //   runSpacing: 5,
           //   children: keyboardLayout.sublist(0, 10),
           // ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: keyboardLayout.sublist(0, 10)),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: keyboardLayout.sublist(0, 10)),
           SizedBox(
             height: widget.spacing,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             const SizedBox(
-              width: 10 ,
+              width: 10,
             ),
             ...keyboardLayout.sublist(10, 21),
             const SizedBox(
-              width: 10 ,
+              width: 10,
             )
           ]),
           SizedBox(
@@ -114,11 +113,7 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              enterButton(widget.handleEnter),
-              ...keyboardLayout.sublist(21),
-              backSpace()
-            ],
+            children: [enterButton(widget.handleEnter), ...keyboardLayout.sublist(21), backSpace()],
           ),
           widget.enableSpaceBar
               ? Column(
@@ -153,15 +148,12 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
               onTap: () {
                 HapticFeedback.heavyImpact();
                 widget.controller.text += letter;
-                widget.controller.selection = TextSelection.fromPosition(
-                    TextPosition(offset: widget.controller.text.length));
+                widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
               },
               onLongPress: () {
-                if (widget.enableLongPressUppercase &&
-                    !widget.enableAllUppercase) {
+                if (widget.enableLongPressUppercase && !widget.enableAllUppercase) {
                   widget.controller.text += letter.toUpperCase();
-                  widget.controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: widget.controller.text.length));
+                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
               child: Center(
@@ -193,8 +185,7 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
             onTap: () {
               HapticFeedback.heavyImpact();
               widget.controller.text += ' ';
-              widget.controller.selection = TextSelection.fromPosition(
-                  TextPosition(offset: widget.controller.text.length));
+              widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
             },
             child: Center(
               child: Text(
@@ -228,17 +219,14 @@ class BuiltInKeyboardState extends State<BuiltInKeyboard> {
               onTap: () {
                 HapticFeedback.heavyImpact();
                 if (widget.controller.text.isNotEmpty) {
-                  widget.controller.text = widget.controller.text
-                      .substring(0, widget.controller.text.length - 1);
-                  widget.controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: widget.controller.text.length));
+                  widget.controller.text = widget.controller.text.substring(0, widget.controller.text.length - 1);
+                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
               onLongPress: () {
                 if (widget.controller.text.isNotEmpty) {
                   widget.controller.text = '';
-                  widget.controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: widget.controller.text.length));
+                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
               child: Center(

@@ -1,0 +1,29 @@
+name: Dart Analysis and Lint Check
+
+on:
+  push:
+    branches:
+      - dev
+      - action_test
+  pull_request:
+    branches:
+      - dev
+      - action_test
+
+jobsÖÖ:
+  analyze_and_lint_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Get Dependencies
+        run: dart pub get
+
+      - name: Analyze and Lint Check
+        run: dart analyze --fatal-warnings && dart format --dry-run --set-exit-if-changed .
