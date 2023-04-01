@@ -34,6 +34,8 @@ class PuzzleView extends StatefulWidget {
 
 class _PuzzleViewState extends State<PuzzleView> {
   //Game is over
+  //Game is over
+  //Game is over
   bool gameOver = false;
 
   late TableCubit cubit;
