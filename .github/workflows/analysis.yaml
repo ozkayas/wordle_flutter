@@ -3,11 +3,11 @@ name: Dart Analysis and Lint Check
 on:
   push:
     branches:
-      - dev
+      - master
       - action_test
   pull_request:
     branches:
-      - dev
+      - master
       - action_test
 
 jobs:
