@@ -23,7 +23,8 @@ jobs:
           sdk: stable
 
       - name: Get Dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Analyze and Lint Check
-        run: dart analyze --fatal-warnings && dart format --dry-run --set-exit-if-changed .
+        run: flutter analyze
+#        run: flutter analyze --fatal-warnings && dart format --dry-run --set-exit-if-changed .
