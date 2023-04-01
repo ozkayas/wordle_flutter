@@ -10,7 +10,7 @@ on:
       - dev
       - action_test
 
-jobsÖÖ:
+jobs:
   analyze_and_lint_check:
     runs-on: ubuntu-latest
 
