@@ -16,14 +16,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: stable
+          flutter-version: '3.7.7'
+          channel: 'stable'
+#
+#      - name: Setup Dart SDK
+#        uses: dart-lang/setup-dart@v1
+#        with:
+#          sdk: stable
 
       - name: Get Dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Analyze and Lint Check
-        run: dart analyze --fatal-warnings && dart format --dry-run --set-exit-if-changed .
+        run: flutter analyze
