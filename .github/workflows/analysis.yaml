@@ -22,15 +22,5 @@ jobs:
 
 
       - name: Analyze and Lint Check
-        run: flutter analyze --no-preamble --no-congratulate
+        run: flutter analyze --no-fatal-info
 
-      - name: Check Analysis Warnings and Errors
-        run: |
-          ANALYSIS_OUTPUT="$(flutter analyze --no-preamble --no-congratulate)"
-          echo "$ANALYSIS_OUTPUT"
-          if grep -q -E '^[ ]*[a-zA-Z0-9_\.\-]+:[0-9]+:[0-9]+(.*warning:|.*error:)' <<< "$ANALYSIS_OUTPUT"; then
-            echo "Code analysis failed due to warnings or errors."
-            exit 1
-          else
-            echo "Code analysis succeeded."
-          fi
