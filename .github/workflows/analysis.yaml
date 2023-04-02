@@ -1,10 +1,6 @@
 name: Dart Analysis and Lint Check
 
 on:
-  push:
-    branches:
-      - master
-      - action_test
   pull_request:
     branches:
       - master
@@ -24,7 +20,17 @@ jobs:
       - name: Get Dependencies
         run: flutter pub get
 
+
       - name: Analyze and Lint Check
+        run: flutter analyze --no-preamble --no-congratulate
+
+      - name: Check Analysis Warnings and Errors
         run: |
-          flutter analyze
-          if [ "$?" = "1" ]; then exit 1; fi
+          ANALYSIS_OUTPUT="$(flutter analyze --no-preamble --no-congratulate)"
+          echo "$ANALYSIS_OUTPUT"
+          if grep -q -E '^[ ]*[a-zA-Z0-9_\.\-]+:[0-9]+:[0-9]+(.*warning:|.*error:)' <<< "$ANALYSIS_OUTPUT"; then
+            echo "Code analysis failed due to warnings or errors."
+            exit 1
+          else
+            echo "Code analysis succeeded."
+          fi
