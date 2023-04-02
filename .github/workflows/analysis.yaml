@@ -22,5 +22,5 @@ jobs:
 
 
       - name: Analyze and Lint Check
-        run: flutter analyze --no-fatal-info
+        run: flutter analyze --no-fatal-infos
 
