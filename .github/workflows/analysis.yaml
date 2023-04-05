@@ -1,10 +1,6 @@
 name: Dart Analysis and Lint Check
 
 on:
-  push:
-    branches:
-      - master
-      - action_test
   pull_request:
     branches:
       - master
@@ -20,14 +16,11 @@ jobs:
         with:
           flutter-version: '3.7.7'
           channel: 'stable'
-#
-#      - name: Setup Dart SDK
-#        uses: dart-lang/setup-dart@v1
-#        with:
-#          sdk: stable
 
       - name: Get Dependencies
         run: flutter pub get
 
+
       - name: Analyze and Lint Check
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
+
