@@ -20,3 +20,6 @@ Here is the link if you'd like to give it a try:
 [Wordle TR 🧩](https://tangerine-gaufre-c70022.netlify.app/#/)
 
 <img width="704" alt="wordle_tr" src="https://user-images.githubusercontent.com/63163416/227967181-983401dd-7908-4ae8-b595-f3cc2a79418d.png">
+
+Privacy Policy:
+https://www.freeprivacypolicy.com/live/8b981b4b-fb72-43f7-918c-cb0e08f1322c

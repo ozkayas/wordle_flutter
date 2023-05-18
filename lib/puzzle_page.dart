@@ -7,6 +7,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
 
+import 'app_text.dart';
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
 import 'features/table/cubit/table_cubit.dart';
@@ -134,20 +135,6 @@ class _PuzzleViewState extends State<PuzzleView> {
           }
         },
         child: Scaffold(
-          // appBar: AppBar(
-          //   actions: [
-          //     TextButton(
-          //       onPressed: () {
-          //         cubit.textController.clear();
-          //         cubit.resetTable;
-          //       },
-          //       child: const Text(
-          //         "Reset",
-          //         style: TextStyle(color: Colors.black),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           body: Center(
             child: ValueListenableBuilder<bool>(
                 valueListenable: cubit.isGameOver,
@@ -155,66 +142,67 @@ class _PuzzleViewState extends State<PuzzleView> {
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      Container(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 450),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Spacer(),
-                              const WordleTable(),
-                              Spacer(),
-                              KeyBoardWidget(
-                                textController: context.read<TableCubit>().textController,
-                                handleEnter: () {
-                                  bool isValid = WordsRepository.targets.contains(cubit.activeText);
-                                  if (!isValid && mounted) {
-                                    showToast(
-                                      'Geçersiz Sözcük',
-                                      alignment: Alignment.center,
-                                      position: StyledToastPosition.center,
-                                      context: context,
-                                      animation: StyledToastAnimation.scale,
-                                    );
-                                    return;
-                                  }
-                                  cubit.enterOnTap(context, paintKeyboard);
-                                }, //handleEnter,
-                              )
-                            ],
-                          ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 450),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Spacer(),
+                            const WordleTable(),
+                            const Spacer(),
+                            KeyBoardWidget(
+                              textController: context.read<TableCubit>().textController,
+                              handleEnter: () {
+                                bool isValid = WordsRepository.targets.contains(cubit.activeText);
+                                if (!isValid && mounted) {
+                                  showToast(
+                                    AppTxt.invalidWord,
+                                    alignment: Alignment.center,
+                                    position: StyledToastPosition.center,
+                                    context: context,
+                                    animation: StyledToastAnimation.scale,
+                                  );
+                                  return;
+                                }
+                                cubit.enterOnTap(context, paintKeyboard);
+                              }, //handleEnter,
+                            )
+                          ],
                         ),
                       ),
                       if (gameOver)
-                        Container(
-                          padding: const EdgeInsets.all(32),
-                          decoration: BoxDecoration(boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black38,
-                              offset: Offset(
-                                5.0,
-                                5.0,
-                              ),
-                              blurRadius: 10.0,
-                              spreadRadius: 2.0,
-                            ),
-                          ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
-                          //height: 200.h,
-                          width: 320,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  cubit.resetTable();
-                                  _keyboardCubit.resetKeyboardState();
-                                },
-                                child: const Text(
-                                  'TEKRAR OYNA',
-                                  style: TextStyle(fontSize: 30, color: Colors.green),
+                        Positioned(
+                          bottom: 100,
+                          child: Container(
+                            padding: const EdgeInsets.all(32),
+                            decoration: BoxDecoration(boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black38,
+                                offset: Offset(
+                                  5.0,
+                                  5.0,
                                 ),
+                                blurRadius: 10.0,
+                                spreadRadius: 2.0,
                               ),
-                            ],
+                            ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
+                            //height: 200.h,
+                            width: 320,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    cubit.resetTable();
+                                    _keyboardCubit.resetKeyboardState();
+                                  },
+                                  child: const Text(
+                                    AppTxt.playAgain,
+                                    style: TextStyle(fontSize: 30, color: Colors.green),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                     ],

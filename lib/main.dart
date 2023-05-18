@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider<KeyboardCubit>(
         create: (_) => KeyboardCubit(),
-        child: PuzzlePage(),
+        child: const PuzzlePage(),
       ),
     );
   }
