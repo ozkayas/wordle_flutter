@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/enums.dart';
+import 'enums.dart';
 import 'built_in_keyboard.dart';
 import 'keyboard_cubit.dart';
 
