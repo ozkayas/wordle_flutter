@@ -56,7 +56,6 @@ class _PuzzleViewState extends State<PuzzleView> {
         tableCubit.textController.text = tableCubit.textController.text.substring(0, 5);
       }
       tableCubit.letterOnTap(tableCubit.textController.text);
-      // context.read<TableCubit>().resetTable();
     });
   }
 
@@ -130,6 +129,7 @@ class _PuzzleViewState extends State<PuzzleView> {
           }
         },
         child: Scaffold(
+          backgroundColor: Colors.blueGrey.shade900,
           body: Center(
             child: ValueListenableBuilder<bool>(
                 valueListenable: tableCubit.isGameOver,
