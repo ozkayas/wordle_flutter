@@ -1,4 +1,4 @@
-package dev.suat.wordle_flutter
+package dev.suat.kelimece
 
 import io.flutter.embedding.android.FlutterActivity
 

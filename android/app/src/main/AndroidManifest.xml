@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.suat.wordle_flutter">
+    package="dev.suat.kelimece">
    <uses-permission android:name="android.permission.INTERNET"/>
     <queries>
   <!-- If your app opens https URLs -->
@@ -25,7 +25,7 @@
 </queries>
 
    <application
-        android:label="Wordle-T"
+        android:label="Kelimece"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
