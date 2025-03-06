@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_flutter/app_text.dart';
 import 'package:wordle_flutter/puzzle_page.dart';
 
 import 'features/keyboard/keyboard_cubit.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Kelimece",
+      title: AppTxt.appTitle,
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),

@@ -91,7 +91,7 @@ class _PuzzleViewState extends State<PuzzleView> {
               bool isValid = WordsRepository.targets.contains(cubit.activeText);
               if (!isValid && mounted) {
                 showToast(
-                  'Geçersiz Sözcük',
+                  AppTxt.invalidWord,
                   alignment: Alignment.center,
                   position: StyledToastPosition.center,
                   context: context,
