@@ -19,8 +19,11 @@ class PuzzlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TableCubit>(
-      create: (_) => TableCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => TableCubit()),
+        BlocProvider(create: (_) => KeyboardCubit()),
+      ],
       child: const PuzzleView(),
     );
   }
@@ -34,46 +37,38 @@ class PuzzleView extends StatefulWidget {
 }
 
 class _PuzzleViewState extends State<PuzzleView> {
-  //Game is over
-  //Game is over
-  //Game is over
   bool gameOver = false;
 
-  late TableCubit cubit;
-  late KeyboardCubit _keyboardCubit;
+  late TableCubit tableCubit;
+  late KeyboardCubit keyboardCubit;
 
   @override
   void initState() {
     super.initState();
 
-    cubit = context.read<TableCubit>();
-    cubit.initTextEditingController();
-    cubit.resetTable();
+    tableCubit = context.read<TableCubit>();
+    keyboardCubit = context.read<KeyboardCubit>();
+    tableCubit.initTextEditingController();
+    tableCubit.resetTable();
 
-    cubit.textController.addListener(() {
-      if (cubit.textController.text.length > 5) {
-        cubit.textController.text = cubit.textController.text.substring(0, 5);
+    tableCubit.textController.addListener(() {
+      if (tableCubit.textController.text.length > 5) {
+        tableCubit.textController.text = tableCubit.textController.text.substring(0, 5);
       }
-      cubit.letterOnTap(cubit.textController.text);
+      tableCubit.letterOnTap(tableCubit.textController.text);
       // context.read<TableCubit>().resetTable();
     });
   }
 
   @override
   void dispose() {
-    cubit.textController.dispose();
+    tableCubit.textController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _keyboardCubit = BlocProvider.of<KeyboardCubit>(context);
-    super.didChangeDependencies();
   }
 
   void paintKeyboard(List<Letter> letters) {
     for (Letter letter in letters) {
-      _keyboardCubit.paintLetter(letter.char, letter.flag);
+      keyboardCubit.paintLetter(letter.char, letter.flag);
     }
   }
 
@@ -88,7 +83,7 @@ class _PuzzleViewState extends State<PuzzleView> {
           if (event is RawKeyDownEvent) {
             /// enter ise
             if (event.logicalKey == LogicalKeyboardKey.enter) {
-              bool isValid = WordsRepository.targets.contains(cubit.activeText);
+              bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
               if (!isValid && mounted) {
                 showToast(
                   AppTxt.invalidWord,
@@ -99,13 +94,13 @@ class _PuzzleViewState extends State<PuzzleView> {
                 );
                 return;
               }
-              cubit.enterOnTap(context, paintKeyboard);
+              tableCubit.enterOnTap(context, paintKeyboard);
             }
 
             /// delete ise
             else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-              String activeText = cubit.textController.text;
-              cubit.textController.text = activeText.substring(0, activeText.length - 1);
+              String activeText = tableCubit.textController.text;
+              tableCubit.textController.text = activeText.substring(0, activeText.length - 1);
             } else if (event.logicalKey.keyLabel.length == 1 &&
                 (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
                     RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
@@ -124,12 +119,12 @@ class _PuzzleViewState extends State<PuzzleView> {
                     event.logicalKey.keyLabel == 'ş' ||
                     event.logicalKey.keyLabel == 'Ş')) {
               if (event.character != null) {
-                if (cubit.textController.text.length >= 5) {
+                if (tableCubit.textController.text.length >= 5) {
                   return;
                 }
-                String currentActiveText = cubit.textController.text;
+                String currentActiveText = tableCubit.textController.text;
                 currentActiveText += event.character!.toUpperCaseTr();
-                cubit.textController.text = currentActiveText;
+                tableCubit.textController.text = currentActiveText;
               }
             }
           }
@@ -137,7 +132,7 @@ class _PuzzleViewState extends State<PuzzleView> {
         child: Scaffold(
           body: Center(
             child: ValueListenableBuilder<bool>(
-                valueListenable: cubit.isGameOver,
+                valueListenable: tableCubit.isGameOver,
                 builder: (context, gameOver, _) {
                   return Stack(
                     alignment: Alignment.center,
@@ -153,7 +148,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                             KeyBoardWidget(
                               textController: context.read<TableCubit>().textController,
                               handleEnter: () {
-                                bool isValid = WordsRepository.targets.contains(cubit.activeText);
+                                bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
                                 if (!isValid && mounted) {
                                   showToast(
                                     AppTxt.invalidWord,
@@ -164,51 +159,58 @@ class _PuzzleViewState extends State<PuzzleView> {
                                   );
                                   return;
                                 }
-                                cubit.enterOnTap(context, paintKeyboard);
+                                tableCubit.enterOnTap(context, paintKeyboard);
                               }, //handleEnter,
                             )
                           ],
                         ),
                       ),
-                      if (gameOver)
-                        Positioned(
-                          bottom: 100,
-                          child: Container(
-                            padding: const EdgeInsets.all(32),
-                            decoration: BoxDecoration(boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black38,
-                                offset: Offset(
-                                  5.0,
-                                  5.0,
-                                ),
-                                blurRadius: 10.0,
-                                spreadRadius: 2.0,
-                              ),
-                            ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
-                            //height: 200.h,
-                            width: 320,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    cubit.resetTable();
-                                    _keyboardCubit.resetKeyboardState();
-                                  },
-                                  child: const Text(
-                                    AppTxt.playAgain,
-                                    style: TextStyle(fontSize: 30, color: Colors.green),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
+                      if (gameOver) const PlayAgainButton()
                     ],
                   );
                 }),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PlayAgainButton extends StatelessWidget {
+  const PlayAgainButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 100,
+      child: Container(
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            offset: Offset(
+              5.0,
+              5.0,
+            ),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
+        width: 320,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              onPressed: () {
+                context.read<TableCubit>().resetTable();
+                context.read<KeyboardCubit>().resetKeyboardState();
+              },
+              child: const Text(
+                AppTxt.playAgain,
+                style: TextStyle(fontSize: 30, color: Colors.green),
+              ),
+            ),
+          ],
         ),
       ),
     );

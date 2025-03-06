@@ -21,10 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: BlocProvider<KeyboardCubit>(
-        create: (_) => KeyboardCubit(),
-        child: const PuzzlePage(),
-      ),
+      home: const PuzzlePage(),
     );
   }
 }
