@@ -7,7 +7,8 @@ class AppColorTheme extends ThemeExtension<AppColorTheme> {
         boxYellow = Colors.yellow.shade700,
         boxGreen = Colors.lightGreen,
         scaffoldBackground = Colors.white,
-        text = Colors.white;
+        text = Colors.white,
+        onBackground = Colors.black;
 
   AppColorTheme.dark()
       : boxDefault = Colors.blueGrey.shade300,
@@ -15,7 +16,8 @@ class AppColorTheme extends ThemeExtension<AppColorTheme> {
         boxYellow = Colors.yellow.shade700,
         boxGreen = Colors.lightGreen,
         scaffoldBackground = Colors.black,
-        text = Colors.white;
+        text = Colors.black,
+        onBackground = Colors.white;
 
   // Current Colors used
   final Color boxDefault;
@@ -24,6 +26,7 @@ class AppColorTheme extends ThemeExtension<AppColorTheme> {
   final Color boxGreen;
   final Color scaffoldBackground;
   final Color text;
+  final Color onBackground;
 
   @override
   ThemeExtension<AppColorTheme> copyWith() {

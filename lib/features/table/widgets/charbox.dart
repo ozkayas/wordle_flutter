@@ -28,7 +28,7 @@ class CharBox extends StatelessWidget {
       child: Center(
           child: Text(
         letter.char,
-        style: const TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: context.color.text),
       )),
     );
   }

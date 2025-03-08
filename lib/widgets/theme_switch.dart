@@ -20,48 +20,42 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 48,
-          child: AnimatedToggleSwitch<ThemeMode>.rolling(
-            animationDuration: Durations.medium1,
-            current: themeMode,
-            values: [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
-            onChanged: (mode) {
-              switch (mode) {
-                case ThemeMode.system:
-                  ThemeModeBuilderConfig.setSystem();
-                  setState(() {
-                    themeMode = ThemeMode.system;
-                  });
-                case ThemeMode.light:
-                  ThemeModeBuilderConfig.setLight();
-                  setState(() {
-                    themeMode = ThemeMode.light;
-                  });
-                case ThemeMode.dark:
-                  ThemeModeBuilderConfig.setDark();
-                  setState(() {
-                    themeMode = ThemeMode.dark;
-                  });
-              }
-              ;
-            },
-            iconBuilder: (ThemeMode mode, _) {
-              switch (mode) {
-                case ThemeMode.system:
-                  return const Icon(Icons.brightness_auto);
-                case ThemeMode.light:
-                  return const Icon(Icons.light_mode);
-                case ThemeMode.dark:
-                  return const Icon(Icons.dark_mode);
-              }
-            },
-          ),
-        ),
+    return SizedBox(
+      height: 48,
+      child: AnimatedToggleSwitch<ThemeMode>.rolling(
+        animationDuration: Durations.medium1,
+        current: themeMode,
+        values: [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
+        onChanged: (mode) {
+          switch (mode) {
+            case ThemeMode.system:
+              ThemeModeBuilderConfig.setSystem();
+              setState(() {
+                themeMode = ThemeMode.system;
+              });
+            case ThemeMode.light:
+              ThemeModeBuilderConfig.setLight();
+              setState(() {
+                themeMode = ThemeMode.light;
+              });
+            case ThemeMode.dark:
+              ThemeModeBuilderConfig.setDark();
+              setState(() {
+                themeMode = ThemeMode.dark;
+              });
+          }
+          ;
+        },
+        iconBuilder: (ThemeMode mode, _) {
+          switch (mode) {
+            case ThemeMode.system:
+              return const Icon(Icons.brightness_auto);
+            case ThemeMode.light:
+              return const Icon(Icons.light_mode);
+            case ThemeMode.dark:
+              return const Icon(Icons.dark_mode);
+          }
+        },
       ),
     );
   }
