@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
-import 'package:wordle_flutter/app_text.dart';
+import 'package:wordle_flutter/core/theme/app_text.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
 
 import '../models/letter.dart';

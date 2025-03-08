@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
 import 'package:wordle_flutter/features/table/models/letter.dart';
 
 // Visual Box for Letter objects
@@ -9,9 +10,9 @@ class CharBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = letter.flag == 0
-        ? Colors.blueGrey.shade700
+        ? context.color.boxDark
         : letter.flag == 1
-            ? Colors.lightGreen
+            ? context.color.boxGreen
             : letter.flag == 2
                 ? Colors.blueGrey.shade300
                 : Colors.yellow.shade700;

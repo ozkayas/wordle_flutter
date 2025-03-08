@@ -7,7 +7,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
 
-import 'app_text.dart';
+import 'core/theme/app_text.dart';
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
 import 'features/table/cubit/table_cubit.dart';
