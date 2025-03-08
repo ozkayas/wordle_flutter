@@ -97,7 +97,6 @@ class TableCubit extends Cubit<TableState> {
   }
 
   void resetTable() {
-    // targetWord = "KALEM";
     targetWord = WordsRepository.targets[Random().nextInt(WordsRepository.targets.length)].toUpperCaseTr();
 
     activeWordIndex = 0;
@@ -106,8 +105,6 @@ class TableCubit extends Cubit<TableState> {
     isGameOver.value = false;
 
     emit(TableState.initial());
-
-    //todo: reset keyboard also
   }
 
   bool isAllLettersGreen(List<Letter> letters) {

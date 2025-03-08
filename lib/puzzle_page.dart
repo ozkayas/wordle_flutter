@@ -53,6 +53,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     keyboardCubit = context.read<KeyboardCubit>();
     tableCubit.initTextEditingController();
     tableCubit.resetTable();
+    keyboardCubit.resetKeyboardState();
 
     tableCubit.textController.addListener(() {
       if (tableCubit.textController.text.length > 5) {
@@ -74,12 +75,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return KeyboardListener(
-      autofocus: true,
-      focusNode: FocusNode(),
-      onKeyEvent: (event) {
+  void onKeyEvent(KeyEvent event) {
         if (event is KeyDownEvent) {
           /// enter ise
           if (event.logicalKey == LogicalKeyboardKey.enter) {
@@ -128,7 +124,14 @@ class _PuzzleViewState extends State<PuzzleView> {
             }
           }
         }
-      },
+      }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardListener(
+      autofocus: true,
+      focusNode: FocusNode(),
+      onKeyEvent: onKeyEvent,
       child: Scaffold(
         backgroundColor: context.color.scaffoldBackground,
         body: Center(
