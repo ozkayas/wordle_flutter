@@ -15,7 +15,7 @@ import 'features/table/models/letter.dart';
 import 'features/table/widgets/wordle_table.dart';
 
 class PuzzlePage extends StatelessWidget {
-  const PuzzlePage({Key? key}) : super(key: key);
+  const PuzzlePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class PuzzlePage extends StatelessWidget {
 }
 
 class PuzzleView extends StatefulWidget {
-  const PuzzleView({Key? key}) : super(key: key);
+  const PuzzleView({super.key});
 
   @override
   _PuzzleViewState createState() => _PuzzleViewState();

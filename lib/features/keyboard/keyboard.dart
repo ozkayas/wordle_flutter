@@ -10,10 +10,10 @@ import 'keyboard_cubit.dart';
 // Wrapper Widget around forked built_in_keyboard package
 class KeyBoardWidget extends StatefulWidget {
   const KeyBoardWidget({
-    Key? key,
+    super.key,
     required this.textController,
     required this.handleEnter,
-  }) : super(key: key);
+  });
   final TextEditingController textController;
   final VoidCallback handleEnter;
 
