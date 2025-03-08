@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
+import 'package:wordle_flutter/widgets/play_again_button.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
+import 'package:wordle_flutter/widgets/theme_switch.dart';
 
 import 'core/theme/app_text.dart';
 import 'features/keyboard/keyboard.dart';
@@ -129,7 +132,7 @@ class _PuzzleViewState extends State<PuzzleView> {
           }
         },
         child: Scaffold(
-          backgroundColor: Colors.blueGrey.shade900,
+          backgroundColor: context.color.scaffoldBackground,
           body: Center(
             child: ValueListenableBuilder<bool>(
                 valueListenable: tableCubit.isGameOver,
@@ -142,6 +145,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            ThemeSwitch(),
                             const Spacer(),
                             const WordleTable(),
                             const Spacer(),
@@ -170,47 +174,6 @@ class _PuzzleViewState extends State<PuzzleView> {
                   );
                 }),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class PlayAgainButton extends StatelessWidget {
-  const PlayAgainButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 100,
-      child: Container(
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(boxShadow: const [
-          BoxShadow(
-            color: Colors.black38,
-            offset: Offset(
-              5.0,
-              5.0,
-            ),
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-          ),
-        ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
-        width: 320,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-              onPressed: () {
-                context.read<TableCubit>().resetTable();
-                context.read<KeyboardCubit>().resetKeyboardState();
-              },
-              child: const Text(
-                AppTxt.playAgain,
-                style: TextStyle(fontSize: 30, color: Colors.green),
-              ),
-            ),
-          ],
         ),
       ),
     );

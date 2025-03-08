@@ -14,7 +14,7 @@ class AppColorTheme extends ThemeExtension<AppColorTheme> {
         boxDark = Colors.blueGrey.shade700,
         boxYellow = Colors.yellow.shade700,
         boxGreen = Colors.lightGreen,
-        scaffoldBackground = Colors.white,
+        scaffoldBackground = Colors.black,
         text = Colors.white;
 
   // Current Colors used
