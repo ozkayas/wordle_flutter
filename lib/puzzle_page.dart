@@ -75,11 +75,11 @@ class _PuzzleViewState extends State<PuzzleView> {
   Widget build(BuildContext context) {
     return SafeArea(
       // https://www.youtube.com/watch?v=5ykfmHhJUu4
-      child: RawKeyboardListener(
+      child: KeyboardListener(
         autofocus: true,
         focusNode: FocusNode(),
-        onKey: (event) {
-          if (event is RawKeyDownEvent) {
+        onKeyEvent: (event) {
+          if (event is KeyDownEvent) {
             /// enter ise
             if (event.logicalKey == LogicalKeyboardKey.enter) {
               bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
