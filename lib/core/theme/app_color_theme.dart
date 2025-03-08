@@ -13,7 +13,7 @@ class AppColorTheme extends ThemeExtension<AppColorTheme> {
   AppColorTheme.dark()
       : boxDefault = Colors.blueGrey.shade300,
         boxDark = Colors.blueGrey.shade700,
-        boxYellow = const Color.fromARGB(255, 209, 160, 37),
+        boxYellow = const Color.fromARGB(255, 205, 180, 115),
         boxGreen = const Color.fromARGB(255, 143, 182, 98),
         scaffoldBackground = const Color.fromARGB(255, 19, 19, 19),
         text = Colors.black,
