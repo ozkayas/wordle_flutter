@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
+import 'package:wordle_flutter/app_text.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
 
 import '../models/letter.dart';
@@ -70,7 +71,7 @@ class TableCubit extends Cubit<TableState> {
     ///
     if (isAllLettersGreen(state.wordsAsLetters![activeWordIndex])) {
       showToast(
-        'BRAVO 🎉',
+        AppTxt.bravo,
         alignment: Alignment.center,
         position: StyledToastPosition.center,
         context: context,
@@ -81,7 +82,7 @@ class TableCubit extends Cubit<TableState> {
       /// we are at the bottom on the list, and all letters are not green
       /// Game OVer
       showToast(
-        'GAME OVER ⛔️',
+        AppTxt.gameOver,
         alignment: Alignment.center,
         position: StyledToastPosition.center,
         context: context,
@@ -97,15 +98,14 @@ class TableCubit extends Cubit<TableState> {
 
   void resetTable() {
     // targetWord = "KALEM";
-      targetWord = WordsRepository.targets[Random().nextInt(WordsRepository.targets.length)].toUpperCaseTr();
+    targetWord = WordsRepository.targets[Random().nextInt(WordsRepository.targets.length)].toUpperCaseTr();
 
     activeWordIndex = 0;
     activeText = '';
     textController.clear();
-    isGameOver.value=false;
+    isGameOver.value = false;
 
     emit(TableState.initial());
-
 
     //todo: reset keyboard also
   }

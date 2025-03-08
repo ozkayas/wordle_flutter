@@ -1,41 +1,10 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_flutter/features/keyboard/keyboard_state.dart';
 
-import '../../models/enums.dart';
+import 'enums.dart';
 
 class KeyboardCubit extends Cubit<Map<String, LetterState>> {
-  KeyboardCubit()
-      : super({
-          'E': LetterState.light,
-          'R': LetterState.light,
-          'T': LetterState.light,
-          'Y': LetterState.light,
-          'U': LetterState.light,
-          'I': LetterState.light,
-          'O': LetterState.light,
-          'P': LetterState.light,
-          'Ğ': LetterState.light,
-          'Ü': LetterState.light,
-          'A': LetterState.light,
-          'S': LetterState.light,
-          'D': LetterState.light,
-          'F': LetterState.light,
-          'G': LetterState.light,
-          'H': LetterState.light,
-          'J': LetterState.light,
-          'K': LetterState.light,
-          'L': LetterState.light,
-          'Ş': LetterState.light,
-          'İ': LetterState.light,
-          'Z': LetterState.light,
-          'C': LetterState.light,
-          'V': LetterState.light,
-          'B': LetterState.light,
-          'N': LetterState.light,
-          'M': LetterState.light,
-          'Ö': LetterState.light,
-          'Ç': LetterState.light,
-        });
+  KeyboardCubit() : super(initialKeyboardState);
 
   //Harfler ver ilgili flag bilgisi 0,1,-1 buraya gelecek
   //Keyboard icin burada ayri degerlendirme yapilacak
@@ -45,8 +14,7 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
     // print('$letter,$flag,${state[letter]}');
 
     //If letter state is not dark and not green
-    if (state[letter] != LetterState.dark &&
-        state[letter] != LetterState.green) {
+    if (state[letter] != LetterState.dark && state[letter] != LetterState.green) {
       //If letterState is already yellow
       if (state[letter] == LetterState.yellow) {
         if (flag == 1) {
@@ -64,35 +32,5 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
     emit(Map<String, LetterState>.from(state));
   }
 
-  void resetKeyboardState() => emit({
-        'E': LetterState.light,
-        'R': LetterState.light,
-        'T': LetterState.light,
-        'Y': LetterState.light,
-        'U': LetterState.light,
-        'I': LetterState.light,
-        'O': LetterState.light,
-        'P': LetterState.light,
-        'Ğ': LetterState.light,
-        'Ü': LetterState.light,
-        'A': LetterState.light,
-        'S': LetterState.light,
-        'D': LetterState.light,
-        'F': LetterState.light,
-        'G': LetterState.light,
-        'H': LetterState.light,
-        'J': LetterState.light,
-        'K': LetterState.light,
-        'L': LetterState.light,
-        'Ş': LetterState.light,
-        'İ': LetterState.light,
-        'Z': LetterState.light,
-        'C': LetterState.light,
-        'V': LetterState.light,
-        'B': LetterState.light,
-        'N': LetterState.light,
-        'M': LetterState.light,
-        'Ö': LetterState.light,
-        'Ç': LetterState.light,
-      });
+  void resetKeyboardState() => emit(initialKeyboardState);
 }
