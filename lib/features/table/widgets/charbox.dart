@@ -1,15 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:wordle_flutter/features/table/models/letter.dart';
 
 // Visual Box for Letter objects
-//
-import 'package:flutter/material.dart';
-
-import '../models/letter.dart';
-
 class CharBox extends StatelessWidget {
-  const CharBox({
-    Key? key,
-    required this.letter,
-  }) : super(key: key);
+  const CharBox({super.key, required this.letter});
   final Letter letter;
 
   @override
@@ -17,10 +11,10 @@ class CharBox extends StatelessWidget {
     final Color color = letter.flag == 0
         ? Colors.blueGrey.shade700
         : letter.flag == 1
-        ? Colors.lightGreen
-        : letter.flag == 2
-        ? Colors.blueGrey.shade300
-        : Colors.yellow.shade700;
+            ? Colors.lightGreen
+            : letter.flag == 2
+                ? Colors.blueGrey.shade300
+                : Colors.yellow.shade700;
     return AnimatedContainer(
       margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(
@@ -32,10 +26,9 @@ class CharBox extends StatelessWidget {
       duration: const Duration(milliseconds: 400),
       child: Center(
           child: Text(
-            letter.char,
-            style: const TextStyle(
-                fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
-          )),
+        letter.char,
+        style: const TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
+      )),
     );
   }
 }

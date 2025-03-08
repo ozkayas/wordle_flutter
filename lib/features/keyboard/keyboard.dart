@@ -3,17 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/enums.dart';
+import 'enums.dart';
 import 'built_in_keyboard.dart';
 import 'keyboard_cubit.dart';
 
 // Wrapper Widget around forked built_in_keyboard package
 class KeyBoardWidget extends StatefulWidget {
   const KeyBoardWidget({
-    Key? key,
+    super.key,
     required this.textController,
     required this.handleEnter,
-  }) : super(key: key);
+  });
   final TextEditingController textController;
   final VoidCallback handleEnter;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../models/enums.dart';
+import 'enums.dart';
 
 class BuiltInTRKeyboard extends StatefulWidget {
   // layoutType of the keyboard
