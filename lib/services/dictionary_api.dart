@@ -13,9 +13,50 @@ class DictionaryApi {
     return http.Client();
   }
 
-  /// Properly encodes Turkish characters in the URL
+  /// Properly encodes Turkish characters in the URL to match browser behavior
   String _encodeWord(String word) {
-    return Uri.encodeComponent(word);
+    // First, ensure the word is lowercase like in browser requests
+    String lowercaseWord = word.toLowerCase();
+
+    // Using a more precise encoding to match browser behavior
+    // For Turkish characters: ç, ğ, ı, i, ö, ş, ü
+    Map<String, String> turkishChars = {
+      'ç': '%C3%A7',
+      'ğ': '%C4%9F',
+      'ı': '%C4%B1',
+      'i': 'i',
+      'ö': '%C3%B6',
+      'ş': '%C5%9F',
+      'ü': '%C3%BC',
+    };
+
+    String encodedWord = lowercaseWord;
+    turkishChars.forEach((key, value) {
+      encodedWord = encodedWord.replaceAll(key, value);
+    });
+
+    // Handle regular ASCII characters
+    String result = '';
+    for (int i = 0; i < encodedWord.length; i++) {
+      final char = encodedWord[i];
+      // If it's already a percent-encoded sequence (from Turkish chars), keep it
+      if (i < encodedWord.length - 2 && char == '%') {
+        result += encodedWord.substring(i, i + 3);
+        i += 2;
+      }
+      // If it's a regular ASCII letter or number, keep it
+      else if ((char.codeUnitAt(0) >= 97 && char.codeUnitAt(0) <= 122) ||
+          (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57)) {
+        result += char;
+      }
+      // Otherwise encode it
+      else {
+        result += Uri.encodeComponent(char);
+      }
+    }
+
+    print('Original word: $word, Encoded word: $result');
+    return result;
   }
 
   /// Fetches word definition from the Turkish dictionary API
@@ -35,11 +76,12 @@ class DictionaryApi {
         // Build request with proper URL encoding and headers
         final url = Uri.parse('$baseUrl?ara=$encodedWord');
 
-        // Add headers to mimic a browser request
+        // Add headers to mimic a browser request - using more common browser headers
         final headers = {
           'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-          'Accept': 'application/json',
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+          'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
           'Connection': 'keep-alive',
         };
 
