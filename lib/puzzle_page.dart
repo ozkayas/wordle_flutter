@@ -76,55 +76,55 @@ class _PuzzleViewState extends State<PuzzleView> {
   }
 
   void onKeyEvent(KeyEvent event) {
-        if (event is KeyDownEvent) {
-          /// enter ise
-          if (event.logicalKey == LogicalKeyboardKey.enter) {
-            bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
-            if (!isValid && mounted) {
-              showToast(
-                AppTxt.invalidWord,
-                alignment: Alignment.center,
-                position: StyledToastPosition.center,
-                context: context,
-                animation: StyledToastAnimation.scale,
-              );
-              return;
-            }
-            tableCubit.enterOnTap(context, paintKeyboard);
-          }
+    if (event is KeyDownEvent) {
+      /// enter ise
+      if (event.logicalKey == LogicalKeyboardKey.enter) {
+        bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
+        if (!isValid && mounted) {
+          showToast(
+            AppTxt.invalidWord,
+            alignment: Alignment.center,
+            position: StyledToastPosition.center,
+            context: context,
+            animation: StyledToastAnimation.scale,
+          );
+          return;
+        }
+        tableCubit.enterOnTap(context, paintKeyboard);
+      }
 
-          /// delete ise
-          else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-            String activeText = tableCubit.textController.text;
-            tableCubit.textController.text = activeText.substring(0, activeText.length - 1);
-          } else if (event.logicalKey.keyLabel.length == 1 &&
-              (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
-                  RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
-                  event.logicalKey.keyLabel == 'ı' ||
-                  event.logicalKey.keyLabel == 'I' ||
-                  event.logicalKey.keyLabel == 'ç' ||
-                  event.logicalKey.keyLabel == 'Ç' ||
-                  event.logicalKey.keyLabel == 'i' ||
-                  event.logicalKey.keyLabel == 'İ' ||
-                  event.logicalKey.keyLabel == 'ğ' ||
-                  event.logicalKey.keyLabel == 'Ğ' ||
-                  event.logicalKey.keyLabel == 'ö' ||
-                  event.logicalKey.keyLabel == 'Ö' ||
-                  event.logicalKey.keyLabel == 'ü' ||
-                  event.logicalKey.keyLabel == 'Ü' ||
-                  event.logicalKey.keyLabel == 'ş' ||
-                  event.logicalKey.keyLabel == 'Ş')) {
-            if (event.character != null) {
-              if (tableCubit.textController.text.length >= 5) {
-                return;
-              }
-              String currentActiveText = tableCubit.textController.text;
-              currentActiveText += event.character!.toUpperCaseTr();
-              tableCubit.textController.text = currentActiveText;
-            }
+      /// delete ise
+      else if (event.logicalKey == LogicalKeyboardKey.backspace) {
+        String activeText = tableCubit.textController.text;
+        tableCubit.textController.text = activeText.substring(0, activeText.length - 1);
+      } else if (event.logicalKey.keyLabel.length == 1 &&
+          (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
+              RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
+              event.logicalKey.keyLabel == 'ı' ||
+              event.logicalKey.keyLabel == 'I' ||
+              event.logicalKey.keyLabel == 'ç' ||
+              event.logicalKey.keyLabel == 'Ç' ||
+              event.logicalKey.keyLabel == 'i' ||
+              event.logicalKey.keyLabel == 'İ' ||
+              event.logicalKey.keyLabel == 'ğ' ||
+              event.logicalKey.keyLabel == 'Ğ' ||
+              event.logicalKey.keyLabel == 'ö' ||
+              event.logicalKey.keyLabel == 'Ö' ||
+              event.logicalKey.keyLabel == 'ü' ||
+              event.logicalKey.keyLabel == 'Ü' ||
+              event.logicalKey.keyLabel == 'ş' ||
+              event.logicalKey.keyLabel == 'Ş')) {
+        if (event.character != null) {
+          if (tableCubit.textController.text.length >= 5) {
+            return;
           }
+          String currentActiveText = tableCubit.textController.text;
+          currentActiveText += event.character!.toUpperCaseTr();
+          tableCubit.textController.text = currentActiveText;
         }
       }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,8 @@ class _PuzzleViewState extends State<PuzzleView> {
                         ],
                       ),
                     ),
-                    if (gameOver) const PlayAgainButton()
+                    if (true) const PlayAgainButton()
+                    // if (gameOver) const PlayAgainButton()
                   ],
                 );
               }),
