@@ -13,50 +13,104 @@ class DictionaryApi {
     return http.Client();
   }
 
-  /// Properly encodes Turkish characters in the URL to match browser behavior
-  String _encodeWord(String word) {
-    // First, ensure the word is lowercase like in browser requests
-    String lowercaseWord = word.toLowerCase();
+  /// Convert Turkish uppercase letters to their proper lowercase equivalents
+  String _turkishToLowerCase(String word) {
+    // Special case: In Turkish, uppercase 'I' becomes lowercase 'ı' (dotless i)
+    // while uppercase 'İ' (dotted I) becomes lowercase 'i'
+    StringBuffer result = StringBuffer();
 
-    // Using a more precise encoding to match browser behavior
-    // For Turkish characters: ç, ğ, ı, i, ö, ş, ü
-    Map<String, String> turkishChars = {
-      'ç': '%C3%A7',
-      'ğ': '%C4%9F',
-      'ı': '%C4%B1',
-      'i': 'i',
-      'ö': '%C3%B6',
-      'ş': '%C5%9F',
-      'ü': '%C3%BC',
-    };
+    for (int i = 0; i < word.length; i++) {
+      final char = word[i];
 
-    String encodedWord = lowercaseWord;
-    turkishChars.forEach((key, value) {
-      encodedWord = encodedWord.replaceAll(key, value);
-    });
-
-    // Handle regular ASCII characters
-    String result = '';
-    for (int i = 0; i < encodedWord.length; i++) {
-      final char = encodedWord[i];
-      // If it's already a percent-encoded sequence (from Turkish chars), keep it
-      if (i < encodedWord.length - 2 && char == '%') {
-        result += encodedWord.substring(i, i + 3);
-        i += 2;
-      }
-      // If it's a regular ASCII letter or number, keep it
-      else if ((char.codeUnitAt(0) >= 97 && char.codeUnitAt(0) <= 122) ||
-          (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57)) {
-        result += char;
-      }
-      // Otherwise encode it
-      else {
-        result += Uri.encodeComponent(char);
+      switch (char) {
+        case 'I':
+          result.write('ı'); // Convert uppercase I to lowercase dotless ı
+          break;
+        case 'İ':
+          result.write('i'); // Convert uppercase dotted İ to lowercase i
+          break;
+        case 'Ç':
+          result.write('ç');
+          break;
+        case 'Ğ':
+          result.write('ğ');
+          break;
+        case 'Ö':
+          result.write('ö');
+          break;
+        case 'Ş':
+          result.write('ş');
+          break;
+        case 'Ü':
+          result.write('ü');
+          break;
+        default:
+          // For other characters, use standard lowercase conversion
+          result.write(char.toLowerCase());
+          break;
       }
     }
 
-    print('Original word: $word, Encoded word: $result');
-    return result;
+    return result.toString();
+  }
+
+  /// Properly encodes Turkish characters in the URL to match browser behavior
+  String _encodeWord(String word) {
+    // First, ensure the word is lowercase using Turkish rules
+    String lowercaseWord = _turkishToLowerCase(word);
+
+    print('Original word: $word, Turkish lowercase: $lowercaseWord');
+
+    // For debugging - show each character's code point
+    for (int i = 0; i < lowercaseWord.length; i++) {
+      print('Char at $i: ${lowercaseWord[i]}, Code: ${lowercaseWord.codeUnitAt(i)}');
+    }
+
+    // Direct encoding approach - process character by character
+    StringBuffer result = StringBuffer();
+
+    for (int i = 0; i < lowercaseWord.length; i++) {
+      final char = lowercaseWord[i];
+      final codeUnit = lowercaseWord.codeUnitAt(i);
+
+      // Handle Turkish specific characters
+      switch (char) {
+        case 'ç':
+          result.write('%C3%A7');
+          break;
+        case 'ğ':
+          result.write('%C4%9F');
+          break;
+        case 'ı': // This is the Turkish dotless i (different from ASCII 'i')
+          result.write('%C4%B1');
+          break;
+        case 'ö':
+          result.write('%C3%B6');
+          break;
+        case 'ş':
+          result.write('%C5%9F');
+          break;
+        case 'ü':
+          result.write('%C3%BC');
+          break;
+        default:
+          // If it's a basic Latin letter (a-z) or digit (0-9), keep it as is
+          if ((codeUnit >= 97 && codeUnit <= 122) || // a-z
+              (codeUnit >= 48 && codeUnit <= 57)) {
+            // 0-9
+            result.write(char);
+          } else {
+            // For any other character, use standard URL encoding
+            result.write(Uri.encodeComponent(char));
+          }
+          break;
+      }
+    }
+
+    String encodedWord = result.toString();
+    print('Encoded result: $encodedWord');
+
+    return encodedWord;
   }
 
   /// Fetches word definition from the Turkish dictionary API
@@ -65,6 +119,8 @@ class DictionaryApi {
   Future<WordDefinition> fetchWord(String word) async {
     int attempts = 0;
     final encodedWord = _encodeWord(word);
+
+    print('Final encoded word used in URL: $encodedWord');
 
     while (attempts < maxRetries) {
       http.Client? client;
