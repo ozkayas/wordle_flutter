@@ -154,8 +154,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                         ],
                       ),
                     ),
-                    if (true) const PlayAgainButton()
-                    // if (gameOver) const PlayAgainButton()
+                    if (gameOver) const PlayAgainButton()
                   ],
                 );
               }),
