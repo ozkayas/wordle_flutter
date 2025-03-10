@@ -2256,7 +2256,7 @@ class WordsRepository {
     'JİLET',
     'JOKER',
     'JOKEY',
-    'JÜPON',
+    'JAPON',
     'KABAK',
     'KABAN',
     'KABIZ',
