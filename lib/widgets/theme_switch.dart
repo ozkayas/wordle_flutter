@@ -30,21 +30,14 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
           switch (mode) {
             case ThemeMode.system:
               ThemeModeBuilderConfig.setSystem();
-              setState(() {
-                themeMode = ThemeMode.system;
-              });
+              setState(() => themeMode = ThemeMode.system);
             case ThemeMode.light:
               ThemeModeBuilderConfig.setLight();
-              setState(() {
-                themeMode = ThemeMode.light;
-              });
+              setState(() => themeMode = ThemeMode.light);
             case ThemeMode.dark:
               ThemeModeBuilderConfig.setDark();
-              setState(() {
-                themeMode = ThemeMode.dark;
-              });
+              setState(() => themeMode = ThemeMode.dark);
           }
-          ;
         },
         iconBuilder: (ThemeMode mode, _) {
           switch (mode) {
