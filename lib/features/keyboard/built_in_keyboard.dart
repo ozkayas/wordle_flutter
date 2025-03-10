@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
 
 import 'enums.dart';
 
@@ -80,8 +81,8 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    double screenHeight = MediaQuery.sizeOf(context).height;
     height = screenHeight > 800 ? screenHeight * 0.059 : screenHeight * 0.07;
     width = screenWidth > 350 ? screenWidth * 0.084 : screenWidth * 0.082;
     List<Widget> keyboardLayout = layout(widget.layoutType);
@@ -89,28 +90,12 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
       constraints: const BoxConstraints(maxWidth: 450),
       child: Column(
         children: [
-          // Wrap(
-          //   alignment: WrapAlignment.center,
-          //   spacing: 3,
-          //   runSpacing: 5,
-          //   children: keyboardLayout.sublist(0, 10),
-          // ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: keyboardLayout.sublist(0, 10)),
-          SizedBox(
-            height: widget.spacing,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            const SizedBox(
-              width: 10,
-            ),
-            ...keyboardLayout.sublist(10, 21),
-            const SizedBox(
-              width: 10,
-            )
-          ]),
-          SizedBox(
-            height: widget.spacing,
-          ),
+          SizedBox(height: widget.spacing),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [const SizedBox(width: 10), ...keyboardLayout.sublist(10, 21), const SizedBox(width: 10)]),
+          SizedBox(height: widget.spacing),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [enterButton(widget.handleEnter), ...keyboardLayout.sublist(21), backSpace()],
@@ -118,9 +103,7 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
           widget.enableSpaceBar
               ? Column(
                   children: [
-                    SizedBox(
-                      height: widget.spacing,
-                    ),
+                    SizedBox(height: widget.spacing),
                     spaceBar(),
                   ],
                 )
@@ -132,6 +115,12 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
 
   // Letter button widget
   Widget buttonLetter(String letter) {
+    final TextStyle letterStyle = widget.letterStyle.copyWith(
+      color: (widget.letterStatus[letter] as LetterState) == LetterState.light
+          ? context.color.passiveKeyboardText
+          : context.color.activeKeyboardText,
+    );
+
     return Flexible(
       child: ClipRRect(
         borderRadius: widget.borderRadius ?? BorderRadius.circular(0),
@@ -141,27 +130,24 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
           width: widget.width ?? width,
           child: Material(
             type: MaterialType.button,
-            color: (widget.letterStatus[letter] as LetterState).color,
+            color: (widget.letterStatus[letter] as LetterState).color(context),
             child: InkWell(
               highlightColor: widget.highlightColor,
               splashColor: widget.splashColor,
               onTap: () {
                 HapticFeedback.heavyImpact();
                 widget.controller.text += letter;
-                widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+                widget.controller.selection =
+                    TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
               },
               onLongPress: () {
                 if (widget.enableLongPressUppercase && !widget.enableAllUppercase) {
                   widget.controller.text += letter.toUpperCase();
-                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+                  widget.controller.selection =
+                      TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
-              child: Center(
-                child: Text(
-                  letter,
-                  style: widget.letterStyle,
-                ),
-              ),
+              child: Center(child: Text(letter, style: letterStyle)),
             ),
           ),
         ),
@@ -185,7 +171,8 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
             onTap: () {
               HapticFeedback.heavyImpact();
               widget.controller.text += ' ';
-              widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+              widget.controller.selection =
+                  TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
             },
             child: Center(
               child: Text(
@@ -212,7 +199,7 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
           width: (widget.width ?? width) + 20,
           child: Material(
             type: MaterialType.button,
-            color: widget.color,
+            color: context.color.keyboardEmpty,
             child: InkWell(
               highlightColor: widget.highlightColor,
               splashColor: widget.splashColor,
@@ -220,20 +207,22 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
                 HapticFeedback.heavyImpact();
                 if (widget.controller.text.isNotEmpty) {
                   widget.controller.text = widget.controller.text.substring(0, widget.controller.text.length - 1);
-                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+                  widget.controller.selection =
+                      TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
               onLongPress: () {
                 if (widget.controller.text.isNotEmpty) {
                   widget.controller.text = '';
-                  widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+                  widget.controller.selection =
+                      TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
                 }
               },
               child: Center(
                 child: Icon(
                   Icons.backspace,
                   size: widget.letterStyle.fontSize,
-                  color: widget.letterStyle.color,
+                  color: context.color.passiveKeyboardText,
                 ),
               ),
             ),
@@ -285,7 +274,7 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
           width: (widget.width ?? width) + 20,
           child: Material(
             type: MaterialType.button,
-            color: widget.color,
+            color: context.color.keyboardEmpty,
             child: InkWell(
               highlightColor: widget.highlightColor,
               splashColor: widget.splashColor,
@@ -297,7 +286,7 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
                 child: Icon(
                   Icons.keyboard_return,
                   size: widget.letterStyle.fontSize,
-                  color: widget.letterStyle.color,
+                  color: context.color.passiveKeyboardText,
                 ),
               ),
             ),
@@ -332,9 +321,7 @@ class BuiltInTRKeyboardState extends State<BuiltInTRKeyboard> {
 
     List<Widget> keyboard = [];
     for (var letter in letters) {
-      keyboard.add(
-        buttonLetter(letter),
-      );
+      keyboard.add(buttonLetter(letter));
     }
     return keyboard;
   }
