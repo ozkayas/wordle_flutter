@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
 
 enum LetterState { green, yellow, light, dark }
 
 extension LetterExtension on LetterState {
-  Color get color {
+  Color color(BuildContext context) {
     switch (this) {
       case LetterState.light:
-        return Colors.blueGrey.shade300;
-      // return const Color(0xffb0b0b1);
+        return context.color.keyboardEmpty;
       case LetterState.dark:
-        return Colors.blueGrey.shade700;
-
-      // return const Color(0xff3a3a3c);
+        return context.color.keyboardFalse;
       case LetterState.green:
-        return Colors.lightGreen;
-
-      // return const Color(0xff538d4e);
+        return context.color.boxGreen;
       case LetterState.yellow:
-        return Colors.yellow.shade700;
-
-      // return const Color(0xffb69f3a);
+        return context.color.boxYellow;
     }
   }
 }
