@@ -23,6 +23,22 @@ class WordleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: getCharBox());
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: getCharBox().intersperse(const SizedBox(width: 8)).toList(),
+    );
+  }
+}
+
+// Helper method to add a separator between widgets
+extension IterableIntersperse on Iterable<Widget> {
+  Iterable<Widget> intersperse(Widget separator) sync* {
+    final iterator = this.iterator;
+    if (!iterator.moveNext()) return;
+    yield iterator.current;
+    while (iterator.moveNext()) {
+      yield separator;
+      yield iterator.current;
+    }
   }
 }
