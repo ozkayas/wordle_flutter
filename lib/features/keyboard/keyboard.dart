@@ -43,7 +43,7 @@ class _KeyBoardWidgetState extends State<KeyBoardWidget> {
             handleEnter: handleEnter,
             layoutType: 'TR',
             letterStatus: state,
-            letterStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: context.color.activeText),
+            letterStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: context.color.activeText),
             borderRadius: BorderRadius.circular(8),
             controller: textController,
             enableLongPressUppercase: false,
