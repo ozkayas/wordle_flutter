@@ -15,10 +15,8 @@ class WordleTable extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: state.wordsAsLetters!
-              .map((wordAsLetter) => WordleWidget(
-            word: '',
-            letters: wordAsLetter,
-          ))
+              .map((wordAsLetter) => WordleWidget(word: '', letters: wordAsLetter))
+              .intersperse(const SizedBox(height: 8))
               .toList(),
         );
       },

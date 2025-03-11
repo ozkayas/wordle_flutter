@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
@@ -5,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
-import 'package:wordle_flutter/app_text.dart';
+import 'package:wordle_flutter/core/theme/app_text.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
+import 'package:wordle_flutter/services/dictionary_api.dart';
 
 import '../models/letter.dart';
 
@@ -18,6 +20,7 @@ class TableCubit extends Cubit<TableState> {
   ValueNotifier<bool> isGameOver = ValueNotifier<bool>(false);
   late final TextEditingController textController;
   String targetWord = '';
+  List<String> meanings = [];
 
   /// We have 6 wordles in a Column, which one is active at the moment?
   /// increment this when enter pressed and guess is evaluated
@@ -97,8 +100,8 @@ class TableCubit extends Cubit<TableState> {
   }
 
   void resetTable() {
-    // targetWord = "KALEM";
     targetWord = WordsRepository.targets[Random().nextInt(WordsRepository.targets.length)].toUpperCaseTr();
+    unawaited(fetchWordMeaning(targetWord));
 
     activeWordIndex = 0;
     activeText = '';
@@ -106,8 +109,11 @@ class TableCubit extends Cubit<TableState> {
     isGameOver.value = false;
 
     emit(TableState.initial());
+  }
 
-    //todo: reset keyboard also
+  Future<void> fetchWordMeaning(String word) async {
+    final meanings = await DictionaryApi().fetchMeanings(word);
+    this.meanings = meanings.sublist(0, min(meanings.length, 3));
   }
 
   bool isAllLettersGreen(List<Letter> letters) {

@@ -4,7 +4,7 @@ import 'package:wordle_flutter/features/keyboard/keyboard_state.dart';
 import 'enums.dart';
 
 class KeyboardCubit extends Cubit<Map<String, LetterState>> {
-  KeyboardCubit() : super(initialKeyboardState);
+  KeyboardCubit() : super(Map.from(initialKeyboardState));
 
   //Harfler ver ilgili flag bilgisi 0,1,-1 buraya gelecek
   //Keyboard icin burada ayri degerlendirme yapilacak
@@ -32,5 +32,5 @@ class KeyboardCubit extends Cubit<Map<String, LetterState>> {
     emit(Map<String, LetterState>.from(state));
   }
 
-  void resetKeyboardState() => emit(initialKeyboardState);
+  void resetKeyboardState() => emit(Map.from(initialKeyboardState));
 }

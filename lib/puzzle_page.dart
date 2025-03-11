@@ -5,9 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:turkish/turkish.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
+import 'package:wordle_flutter/widgets/play_again_button.dart';
 import 'package:wordle_flutter/repositories/words_repository.dart';
+import 'package:wordle_flutter/widgets/settings_button.dart';
 
-import 'app_text.dart';
+import 'core/theme/app_text.dart';
 import 'features/keyboard/keyboard.dart';
 import 'features/keyboard/keyboard_cubit.dart';
 import 'features/table/cubit/table_cubit.dart';
@@ -50,6 +53,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     keyboardCubit = context.read<KeyboardCubit>();
     tableCubit.initTextEditingController();
     tableCubit.resetTable();
+    keyboardCubit.resetKeyboardState();
 
     tableCubit.textController.addListener(() {
       if (tableCubit.textController.text.length > 5) {
@@ -71,148 +75,111 @@ class _PuzzleViewState extends State<PuzzleView> {
     }
   }
 
+  void onKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      /// enter ise
+      if (event.logicalKey == LogicalKeyboardKey.enter) {
+        bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
+        if (!isValid && mounted) {
+          showToast(
+            AppTxt.invalidWord,
+            alignment: Alignment.center,
+            position: StyledToastPosition.center,
+            context: context,
+            animation: StyledToastAnimation.scale,
+          );
+          return;
+        }
+        tableCubit.enterOnTap(context, paintKeyboard);
+      }
+
+      /// delete ise
+      else if (event.logicalKey == LogicalKeyboardKey.backspace) {
+        String activeText = tableCubit.textController.text;
+        tableCubit.textController.text = activeText.substring(0, activeText.length - 1);
+      } else if (event.logicalKey.keyLabel.length == 1 &&
+          (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
+              RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
+              event.logicalKey.keyLabel == 'ı' ||
+              event.logicalKey.keyLabel == 'I' ||
+              event.logicalKey.keyLabel == 'ç' ||
+              event.logicalKey.keyLabel == 'Ç' ||
+              event.logicalKey.keyLabel == 'i' ||
+              event.logicalKey.keyLabel == 'İ' ||
+              event.logicalKey.keyLabel == 'ğ' ||
+              event.logicalKey.keyLabel == 'Ğ' ||
+              event.logicalKey.keyLabel == 'ö' ||
+              event.logicalKey.keyLabel == 'Ö' ||
+              event.logicalKey.keyLabel == 'ü' ||
+              event.logicalKey.keyLabel == 'Ü' ||
+              event.logicalKey.keyLabel == 'ş' ||
+              event.logicalKey.keyLabel == 'Ş')) {
+        if (event.character != null) {
+          if (tableCubit.textController.text.length >= 5) {
+            return;
+          }
+          String currentActiveText = tableCubit.textController.text;
+          currentActiveText += event.character!.toUpperCaseTr();
+          tableCubit.textController.text = currentActiveText;
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      // https://www.youtube.com/watch?v=5ykfmHhJUu4
-      child: KeyboardListener(
-        autofocus: true,
-        focusNode: FocusNode(),
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent) {
-            /// enter ise
-            if (event.logicalKey == LogicalKeyboardKey.enter) {
-              bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
-              if (!isValid && mounted) {
-                showToast(
-                  AppTxt.invalidWord,
+    return KeyboardListener(
+      autofocus: true,
+      focusNode: FocusNode(),
+      onKeyEvent: onKeyEvent,
+      child: Scaffold(
+        backgroundColor: context.color.scaffoldBackground,
+        body: Center(
+          child: ValueListenableBuilder<bool>(
+              valueListenable: tableCubit.isGameOver,
+              builder: (context, gameOver, _) {
+                return Stack(
                   alignment: Alignment.center,
-                  position: StyledToastPosition.center,
-                  context: context,
-                  animation: StyledToastAnimation.scale,
-                );
-                return;
-              }
-              tableCubit.enterOnTap(context, paintKeyboard);
-            }
-
-            /// delete ise
-            else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-              String activeText = tableCubit.textController.text;
-              tableCubit.textController.text = activeText.substring(0, activeText.length - 1);
-            } else if (event.logicalKey.keyLabel.length == 1 &&
-                (RegExp(r'[a-z]').hasMatch(event.logicalKey.keyLabel) ||
-                    RegExp(r'[A-Z]').hasMatch(event.logicalKey.keyLabel) ||
-                    event.logicalKey.keyLabel == 'ı' ||
-                    event.logicalKey.keyLabel == 'I' ||
-                    event.logicalKey.keyLabel == 'ç' ||
-                    event.logicalKey.keyLabel == 'Ç' ||
-                    event.logicalKey.keyLabel == 'i' ||
-                    event.logicalKey.keyLabel == 'İ' ||
-                    event.logicalKey.keyLabel == 'ğ' ||
-                    event.logicalKey.keyLabel == 'Ğ' ||
-                    event.logicalKey.keyLabel == 'ö' ||
-                    event.logicalKey.keyLabel == 'Ö' ||
-                    event.logicalKey.keyLabel == 'ü' ||
-                    event.logicalKey.keyLabel == 'Ü' ||
-                    event.logicalKey.keyLabel == 'ş' ||
-                    event.logicalKey.keyLabel == 'Ş')) {
-              if (event.character != null) {
-                if (tableCubit.textController.text.length >= 5) {
-                  return;
-                }
-                String currentActiveText = tableCubit.textController.text;
-                currentActiveText += event.character!.toUpperCaseTr();
-                tableCubit.textController.text = currentActiveText;
-              }
-            }
-          }
-        },
-        child: Scaffold(
-          backgroundColor: Colors.blueGrey.shade900,
-          body: Center(
-            child: ValueListenableBuilder<bool>(
-                valueListenable: tableCubit.isGameOver,
-                builder: (context, gameOver, _) {
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 450),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Spacer(),
-                            const WordleTable(),
-                            const Spacer(),
-                            KeyBoardWidget(
-                              textController: context.read<TableCubit>().textController,
-                              handleEnter: () {
-                                bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
-                                if (!isValid && mounted) {
-                                  showToast(
-                                    AppTxt.invalidWord,
-                                    alignment: Alignment.center,
-                                    position: StyledToastPosition.center,
-                                    context: context,
-                                    animation: StyledToastAnimation.scale,
-                                  );
-                                  return;
-                                }
-                                tableCubit.enterOnTap(context, paintKeyboard);
-                              }, //handleEnter,
-                            )
-                          ],
-                        ),
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 450),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SettingsButton(),
+                          const Spacer(flex: 75),
+                          const WordleTable(),
+                          const Spacer(flex: 100),
+                          keyboard(context)
+                        ],
                       ),
-                      if (gameOver) const PlayAgainButton()
-                    ],
-                  );
-                }),
-          ),
+                    ),
+                    if (gameOver) const PlayAgainButton()
+                  ],
+                );
+              }),
         ),
       ),
     );
   }
-}
 
-class PlayAgainButton extends StatelessWidget {
-  const PlayAgainButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 100,
-      child: Container(
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(boxShadow: const [
-          BoxShadow(
-            color: Colors.black38,
-            offset: Offset(
-              5.0,
-              5.0,
-            ),
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-          ),
-        ], color: Colors.white, borderRadius: BorderRadius.circular(24)),
-        width: 320,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-              onPressed: () {
-                context.read<TableCubit>().resetTable();
-                context.read<KeyboardCubit>().resetKeyboardState();
-              },
-              child: const Text(
-                AppTxt.playAgain,
-                style: TextStyle(fontSize: 30, color: Colors.green),
-              ),
-            ),
-          ],
-        ),
-      ),
+  KeyBoardWidget keyboard(BuildContext context) {
+    return KeyBoardWidget(
+      textController: context.read<TableCubit>().textController,
+      handleEnter: () {
+        bool isValid = WordsRepository.targets.contains(tableCubit.activeText);
+        if (!isValid && mounted) {
+          showToast(
+            AppTxt.invalidWord,
+            alignment: Alignment.center,
+            position: StyledToastPosition.center,
+            context: context,
+            animation: StyledToastAnimation.scale,
+          );
+          return;
+        }
+        tableCubit.enterOnTap(context, paintKeyboard);
+      }, //handleEnter,
     );
   }
 }

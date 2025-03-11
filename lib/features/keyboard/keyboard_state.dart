@@ -1,6 +1,6 @@
 import 'package:wordle_flutter/features/keyboard/enums.dart';
 
-final Map<String, LetterState> initialKeyboardState = {
+const Map<String, LetterState> initialKeyboardState = {
   'A': LetterState.light,
   'B': LetterState.light,
   'C': LetterState.light,

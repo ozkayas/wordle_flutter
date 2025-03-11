@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
 
 import 'enums.dart';
 import 'built_in_keyboard.dart';
@@ -42,13 +43,14 @@ class _KeyBoardWidgetState extends State<KeyBoardWidget> {
             handleEnter: handleEnter,
             layoutType: 'TR',
             letterStatus: state,
+            letterStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: context.color.activeText),
             borderRadius: BorderRadius.circular(8),
             controller: textController,
             enableLongPressUppercase: false,
             enableSpaceBar: false,
             enableBackSpace: true,
             enableCapsLock: false,
-            color: Colors.blueGrey.shade300,
+            color: context.color.boxEmpty,
           );
         },
       ),
