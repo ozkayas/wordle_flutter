@@ -104,7 +104,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
       ),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 24, color: Colors.green),
+        style: const TextStyle(fontSize: 22, color: Colors.green),
       ),
     );
   }
