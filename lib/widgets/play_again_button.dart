@@ -36,7 +36,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              AppTxt.targetWord(context.read<TableCubit>().targetWord),
+AppTxt.targetWord(context.read<TableCubit>().targetWord),
               style: TextStyle(fontSize: 24, color: context.color.onBackground),
             ),
             const SizedBox(height: 16),

@@ -5,6 +5,8 @@ class AppTxt {
   static const String showMeaning = 'Anlamı Göster';
   static const String invalidWord = 'Geçersiz Sözcük';
   static String targetWord(String word) => 'Sözcük: $word';
+  static const settings = 'Ayarlar';
+  static const theme = 'Tema';
 
   // Added magic strings from codebase
   static const String appTitle = 'Kelimece';

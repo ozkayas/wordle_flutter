@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wordle_flutter/core/theme/app_color_ext.dart';
+import 'package:wordle_flutter/core/theme/app_text.dart';
 import 'package:wordle_flutter/widgets/theme_switch.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.color.scaffoldBackground,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text(AppTxt.settings),
         backgroundColor: context.color.scaffoldBackground,
         foregroundColor: context.color.onBackground,
         elevation: 0,
@@ -21,7 +22,7 @@ class SettingsPage extends StatelessWidget {
           children: [
             const SizedBox(height: 32),
             Text(
-              'Theme',
+              AppTxt.theme,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: context.color.onBackground),
             ),
             const SizedBox(height: 16),
