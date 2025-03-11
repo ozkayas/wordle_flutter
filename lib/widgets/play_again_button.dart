@@ -36,7 +36,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-AppTxt.targetWord(context.read<TableCubit>().targetWord),
+              AppTxt.targetWord(context.read<TableCubit>().targetWord),
               style: TextStyle(fontSize: 24, color: context.color.onBackground),
             ),
             const SizedBox(height: 16),
@@ -71,7 +71,7 @@ AppTxt.targetWord(context.read<TableCubit>().targetWord),
           return TextButton(
             onPressed: () => showMeanings.value = true,
             style: TextButton.styleFrom(
-              fixedSize: Size(buttonWidth, 56),
+              fixedSize: Size(buttonWidth, 60),
               padding: const EdgeInsets.all(16),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.green, width: 1),
@@ -94,7 +94,7 @@ AppTxt.targetWord(context.read<TableCubit>().targetWord),
         context.read<KeyboardCubit>().resetKeyboardState();
       },
       style: TextButton.styleFrom(
-        fixedSize: Size(buttonWidth, 56),
+        fixedSize: Size(buttonWidth, 60),
         padding: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.green, width: 1),
