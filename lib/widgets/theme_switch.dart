@@ -28,16 +28,14 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
         current: themeMode,
         values: [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
         onChanged: (mode) {
+          setState(() => themeMode = mode);
           switch (mode) {
             case ThemeMode.system:
               ThemeModeBuilderConfig.setSystem();
-              setState(() => themeMode = ThemeMode.system);
             case ThemeMode.light:
               ThemeModeBuilderConfig.setLight();
-              setState(() => themeMode = ThemeMode.light);
             case ThemeMode.dark:
               ThemeModeBuilderConfig.setDark();
-              setState(() => themeMode = ThemeMode.dark);
           }
         },
         borderWidth: 1.0,
