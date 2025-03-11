@@ -50,7 +50,6 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
   }
 
   Widget showMeaning(BuildContext context) {
-    final buttonWidth = MediaQuery.sizeOf(context).width * 0.5;
     return ValueListenableBuilder<bool>(
         valueListenable: showMeanings,
         builder: (context, value, child) {
@@ -68,31 +67,33 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
             );
           }
 
-          return TextButton(
+          return _buildButton(
             onPressed: () => showMeanings.value = true,
-            style: TextButton.styleFrom(
-              fixedSize: Size(buttonWidth, 60),
-              padding: const EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(color: Colors.green, width: 1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: const Text(
-              AppTxt.showMeaning,
-              style: TextStyle(fontSize: 24, color: Colors.green),
-            ),
+            text: AppTxt.showMeaning,
+            context: context,
           );
         });
   }
 
   Widget playAgain(BuildContext context) {
-    final buttonWidth = MediaQuery.sizeOf(context).width * 0.5;
-    return TextButton(
+    return _buildButton(
       onPressed: () {
         context.read<TableCubit>().resetTable();
         context.read<KeyboardCubit>().resetKeyboardState();
       },
+      text: AppTxt.playAgain,
+      context: context,
+    );
+  }
+
+  Widget _buildButton({
+    required VoidCallback onPressed,
+    required String text,
+    required BuildContext context,
+  }) {
+    final buttonWidth = MediaQuery.sizeOf(context).width * 0.5;
+    return TextButton(
+      onPressed: onPressed,
       style: TextButton.styleFrom(
         fixedSize: Size(buttonWidth, 60),
         padding: const EdgeInsets.all(16),
@@ -101,9 +102,9 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      child: const Text(
-        AppTxt.playAgain,
-        style: TextStyle(fontSize: 24, color: Colors.green),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 24, color: Colors.green),
       ),
     );
   }
