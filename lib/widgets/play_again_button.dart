@@ -36,7 +36,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Sözcük: ${context.read<TableCubit>().targetWord}",
+              AppTxt.targetWord(context.read<TableCubit>().targetWord),
               style: TextStyle(fontSize: 24, color: context.color.onBackground),
             ),
             const SizedBox(height: 16),
@@ -50,15 +50,18 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
   }
 
   Widget showMeaning(BuildContext context) {
+    final buttonWidth = MediaQuery.sizeOf(context).width * 0.5;
     return ValueListenableBuilder<bool>(
         valueListenable: showMeanings,
         builder: (context, value, child) {
           if (value) {
+            final meanings = context.read<TableCubit>().meanings;
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var i = 0; i < context.read<TableCubit>().meanings.length; i++)
+                for (var i = 0; i < meanings.length; i++)
                   Text(
-                    "${i + 1}. ${context.read<TableCubit>().meanings[i]}",
+                    "${i + 1}. ${meanings[i].replaceAll("► ", "")}",
                     style: TextStyle(fontSize: 16, color: context.color.onBackground),
                   ),
               ],
@@ -68,6 +71,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
           return TextButton(
             onPressed: () => showMeanings.value = true,
             style: TextButton.styleFrom(
+              fixedSize: Size(buttonWidth, 56),
               padding: const EdgeInsets.all(16),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.green, width: 1),
@@ -75,7 +79,7 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
               ),
             ),
             child: const Text(
-              "Anlamı Göster",
+              AppTxt.showMeaning,
               style: TextStyle(fontSize: 24, color: Colors.green),
             ),
           );
@@ -83,13 +87,14 @@ class _PlayAgainButtonState extends State<PlayAgainButton> {
   }
 
   Widget playAgain(BuildContext context) {
+    final buttonWidth = MediaQuery.sizeOf(context).width * 0.5;
     return TextButton(
       onPressed: () {
         context.read<TableCubit>().resetTable();
         context.read<KeyboardCubit>().resetKeyboardState();
       },
       style: TextButton.styleFrom(
-        // backgroundColor: Colors.green,
+        fixedSize: Size(buttonWidth, 56),
         padding: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.green, width: 1),

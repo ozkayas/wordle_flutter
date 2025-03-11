@@ -113,7 +113,7 @@ class TableCubit extends Cubit<TableState> {
 
   Future<void> fetchWordMeaning(String word) async {
     final meanings = await DictionaryApi().fetchMeanings(word);
-    this.meanings = meanings;
+    this.meanings = meanings.sublist(0, min(meanings.length, 3));
   }
 
   bool isAllLettersGreen(List<Letter> letters) {

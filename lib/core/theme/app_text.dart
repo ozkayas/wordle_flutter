@@ -2,7 +2,9 @@
 
 class AppTxt {
   static const String playAgain = 'Tekrar Oyna';
+  static const String showMeaning = 'Anlamı Göster';
   static const String invalidWord = 'Geçersiz Sözcük';
+  static String targetWord(String word) => 'Sözcük: $word';
 
   // Added magic strings from codebase
   static const String appTitle = 'Kelimece';
