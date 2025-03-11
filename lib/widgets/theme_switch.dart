@@ -3,6 +3,7 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_mode_builder/theme_mode_builder.dart';
+import 'package:wordle_flutter/core/theme/app_color_ext.dart';
 
 class ThemeSwitch extends StatefulWidget {
   const ThemeSwitch({super.key});
@@ -10,6 +11,7 @@ class ThemeSwitch extends StatefulWidget {
   @override
   State<ThemeSwitch> createState() => _ThemeSwitchState();
 }
+
 class _ThemeSwitchState extends State<ThemeSwitch> {
   ThemeMode themeMode = ThemeMode.system;
   @override
@@ -39,6 +41,8 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
               setState(() => themeMode = ThemeMode.dark);
           }
         },
+        borderWidth: 1.0,
+        style: ToggleStyle(backgroundColor: Colors.white),
         iconBuilder: (ThemeMode mode, _) {
           switch (mode) {
             case ThemeMode.system:
